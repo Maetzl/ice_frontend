@@ -31,7 +31,7 @@ jobs:
         if: always()
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          file: ./coverage/clover.xml
+          file: ./coverage/cobertura-coverage.xml
           flags: unittests # optional
           name: codecov-umbrella # optional
       - name: 🐳 Login to Docker Hub
