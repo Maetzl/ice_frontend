@@ -2,6 +2,12 @@
 
 ![example workflow](https://github.com/maetzl/ice_frontend/actions/workflows/deploy.yml/badge.svg)
 
+# Codecoverage
+
+Frontend: [![codecov](https://codecov.io/gh/Maetzl/ice_frontend/branch/main/graph/badge.svg?token=4NYZLQ9M5T)](https://codecov.io/gh/Maetzl/ice_frontend)
+
+Backend: [![codecov](https://codecov.io/gh/Maetzl/ice_backend/branch/main/graph/badge.svg?token=D9CSE8TBM7)](https://codecov.io/gh/Maetzl/ice_backend)
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
