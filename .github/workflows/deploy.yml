@@ -48,4 +48,4 @@ jobs:
           file: ./infrastructure/Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}:latest
+            ghcr.io/maetzl/ice_frontend:latest
