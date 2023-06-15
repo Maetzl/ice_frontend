@@ -13,7 +13,7 @@ export default function Navigation() {
             ICE
           </span>
         </Link>
-        <Link to="/login" className="text-gray-300">
+        <Link to="/login" className="text-gray-900">
           Login
         </Link>
         <button

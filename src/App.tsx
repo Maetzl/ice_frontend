@@ -11,6 +11,8 @@ import PublishYourGames from "./pages/PublishYourGames";
 import Contact from "./pages/Contact";
 import Placeholder from "./pages/Placeholder";
 import Footer from "./components/Footer";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 
 function App() {
   return (
@@ -25,6 +27,8 @@ function App() {
           <Route path="/publish" element={<PublishYourGames />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/placeholder" element={<Placeholder />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
         </Routes>
         <Footer></Footer>
       </BrowserRouter>

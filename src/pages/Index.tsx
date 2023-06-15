@@ -5,7 +5,7 @@ export default function Index() {
     <div>
       <section className="bg-gray-200 py-16">
         <div className="container mx-auto text-center">
-          <h1 className="text-xl font-bold mb-4">
+          <h1 className="text-4xl font-bold mb-4">
             Welcome to the Gaming Marketplace
           </h1>
           <p className="text-lg text-gray-700 mb-8">
