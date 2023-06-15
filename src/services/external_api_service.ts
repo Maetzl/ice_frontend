@@ -5,6 +5,8 @@ const callExternalApi = async (options : any) => {
     const response = await axios(options.config);
     const { data } = response;
 
+    console.log(response)
+
     return {
       data,
       error: null,
