@@ -72,7 +72,8 @@
       "text"
     ],
     "transformIgnorePatterns": [
-      "/node_modules/(?!antd|@ant-design|konva|d3-.+?|internmap|rc-.+?|@babel/runtime).+(js|jsx)$"
+      "/node_modules/(?!antd|axios|@ant-design|konva|d3-.+?|internmap|rc-.+?|@babel/runtime).+(js|jsx)$"
     ]
   }
+  
 }
