@@ -1,7 +1,6 @@
-//@ts-nocheck
 import axios from "axios";
 
-const callExternalApi = async (options) => {
+const callExternalApi = async (options : any) => {
   try {
     const response = await axios(options.config);
     const { data } = response;
@@ -10,7 +9,7 @@ const callExternalApi = async (options) => {
       data,
       error: null,
     };
-  } catch (error) {
+  } catch (error : any) {
     if (axios.isAxiosError(error)) {
       const axiosError = error;
 
