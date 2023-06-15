@@ -1,6 +1,9 @@
+import { useAuth0 } from "@auth0/auth0-react";
 import React from "react";
 
 export default function Index() {
+  const { error } = useAuth0();
+
   return (
     <div>
       <section className="bg-gray-200 py-16">

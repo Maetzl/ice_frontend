@@ -1,9 +1,14 @@
 import React, { useState } from "react";
-import { Menu } from "@headlessui/react";
 import { Outlet, Link } from "react-router-dom";
+import LoginButton from "../login/LoginButton";
+import { useAuth0 } from "@auth0/auth0-react";
+import LogoutButton from "../login/LogoutButton";
 
 export default function Navigation() {
   const [open, setOpen] = useState(false);
+
+  const { isAuthenticated } = useAuth0();
+
   return (
     <nav className="bg-white border-gray-200 dark:bg-gray-900">
       <div className="flex flex-wrap items-center justify-between max-w-screen-xl p-4 mx-auto">
@@ -13,9 +18,7 @@ export default function Navigation() {
             ICE
           </span>
         </Link>
-        <Link to="/login" className="text-gray-300">
-          Login
-        </Link>
+        {isAuthenticated ? <LogoutButton /> : <LoginButton />}
         <button
           onClick={() => {
             setOpen((prev) => !prev);
