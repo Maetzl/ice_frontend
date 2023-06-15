@@ -1,9 +1,8 @@
-//@ts-nocheck
 import { Auth0Provider } from "@auth0/auth0-react";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-export const Auth0_provider = ({ children }) => {
+export const Auth0_provider = (children: any) => {
   const navigate = useNavigate();
 
   const domain = process.env.REACT_APP_AUTH0_DOMAIN;
@@ -11,7 +10,7 @@ export const Auth0_provider = ({ children }) => {
   const redirectUri = process.env.REACT_APP_AUTH0_CALLBACK_URL;
   const audience = process.env.REACT_APP_AUTH0_AUDIENCE;
 
-  const onRedirectCallback = (appState) => {
+  const onRedirectCallback = (appState: any) => {
     navigate(appState?.returnTo || window.location.pathname);
   };
 
