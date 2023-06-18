@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import AWS from "aws-sdk";
 import { useAuth0 } from "@auth0/auth0-react";
-import { getProfile, updateProfile } from "../services/profile_service";
+import { updateProfile } from "../services/profile_service";
 import { useLocation } from "react-router-dom";
 
 export default function EditData() {
@@ -12,13 +12,18 @@ export default function EditData() {
   const [description, setDescription] = useState("");
   const [favoriteGame, setFavoriteGame] = useState("");
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const userID = user?.toString().split("|")[1] || "";
+  var userID = "";
   // AWS Stuff
   const bucketName = "icegaming";
   const accessKeyId = process.env.REACT_APP_AWS_ACCESS_KEY_ID;
   const secretAccessKey = process.env.REACT_APP_AWS_SECRET_ACCESS_KEY;
   const region = process.env.REACT_APP_AWS_REGION;
   const s3 = new AWS.S3();
+
+  if (user?.sub) {
+    userID = user?.sub.split("|")[1];
+    console.log(userID);
+  }
 
   AWS.config.update({
     accessKeyId: accessKeyId,
@@ -40,7 +45,7 @@ export default function EditData() {
 
   // Funktion zum Hochladen eines Bildes
   const uploadImageToS3Profilepictures = async (file: File) => {
-    console.log(userID);
+    console.log("UserID Picture", userID);
     const params = {
       Bucket: bucketName,
       Key: `profilepictures/PB${userID}`,
@@ -74,7 +79,7 @@ export default function EditData() {
     form.append("UserID", userID);
     const accessToken = await getAccessTokenSilently();
 
-    console.log(userID);
+    console.log("The UserID: ", userID);
     const { data, error } = await updateProfile(accessToken, form);
 
     if (data) {
