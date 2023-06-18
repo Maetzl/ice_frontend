@@ -10,6 +10,7 @@ import Library from "./pages/Library";
 import PublishYourGames from "./pages/PublishYourGames";
 import Contact from "./pages/Contact";
 import Placeholder from "./pages/Placeholder";
+import EditData from "./pages/EditData";
 
 function App() {
   return (
@@ -29,6 +30,10 @@ function App() {
         <Route path="/publish" element={<PublishYourGames />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/placeholder" element={<Placeholder />} />
+        <Route
+          path="/editData"
+          element={<AuthenticationGuard component={EditData} />}
+        />
       </Routes>
       <Footer></Footer>
     </div>
