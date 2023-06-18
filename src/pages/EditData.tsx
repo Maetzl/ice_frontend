@@ -12,7 +12,7 @@ export default function EditData() {
   const [description, setDescription] = useState("");
   const [favoriteGame, setFavoriteGame] = useState("");
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const userID = user?.sub?.toString().split("|")[1];
+  const userID = user?.toString().split("|")[1] || "";
   // AWS Stuff
   const bucketName = "icegaming";
   const accessKeyId = process.env.REACT_APP_AWS_ACCESS_KEY_ID;
@@ -68,9 +68,10 @@ export default function EditData() {
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     var form = new FormData();
-    form.append("name", name);
-    form.append("description", description);
-    form.append("country", country);
+    form.append("Name", name);
+    form.append("Description", description);
+    form.append("Country", country);
+    form.append("UserID", userID);
     const accessToken = await getAccessTokenSilently();
 
     console.log(userID);
