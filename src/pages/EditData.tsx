@@ -129,10 +129,10 @@ export default function EditData() {
             <select
               id="country"
               className="w-full px-3 py-2 text-white bg-gray-700 border rounded-lg"
-              value={data.state.country}
+              value={country}
               onChange={handleCountryChange}
             >
-              <option value="">Ice Land</option>
+              <option value="">{data.state.country}</option>
               <option value="Germany">Germany</option>
               <option value="USA">USA</option>
               <option value="France">France</option>

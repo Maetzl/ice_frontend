@@ -27,7 +27,10 @@ function App() {
           path="/profile"
           element={<AuthenticationGuard component={Profile} />}
         />
-        <Route path="/publish" element={<PublishYourGames />} />
+        <Route
+          path="/publish"
+          element={<AuthenticationGuard component={PublishYourGames} />}
+        />
         <Route path="/contact" element={<Contact />} />
         <Route path="/placeholder" element={<Placeholder />} />
         <Route

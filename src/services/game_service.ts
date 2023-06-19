@@ -1,37 +1,46 @@
 import { callExternalApi } from "./external_api_service";
 
 const apiServerUrl = process.env.REACT_APP_API_SERVER_URL;
-const getProfile = async (accessToken: string, userData: FormData) => {
-  
+
+const getGame = async (accessToken: string, gameID: any) => {
+    var form = new FormData();
+    form.append("GameID", gameID);
   const config = {
-    url: `${apiServerUrl}/api/profile/`,
+    url: `${apiServerUrl}/api/game`,
     method: "POST",
     headers: {
-      "content-type": "application/json",
-      Authorization: `Bearer ${accessToken}`
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
     },
-    data : userData
+    data : form
   };
+
   const { data, error } = await callExternalApi({ config });
   return {
     data: data || null,
     error,
   };
 };
-const updateProfile = async (accessToken: string, userData: FormData) => {
+
+const createGame = async (
+  accessToken: string,
+  gameData: FormData
+) => {
   const config = {
-    url: `${apiServerUrl}/api/profile/update/`,
+    url: `${apiServerUrl}/api/game/update`,
     method: "POST",
     headers: {
       "content-type": "application/json",
-      Authorization: `Bearer ${accessToken}`
+      Authorization: `Bearer ${accessToken}`,
     },
-    data : userData
+    data: gameData,
   };
+
   const { data, error } = await callExternalApi({ config });
   return {
     data: data || null,
     error,
   };
 };
-export {getProfile, updateProfile}
+
+export { getGame, createGame };

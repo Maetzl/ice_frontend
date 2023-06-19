@@ -20,11 +20,18 @@ export default function Profile() {
     const getMessage = async () => {
       const accessToken = await getAccessTokenSilently();
       var userID = "";
+      var tempName = "";
       if (user?.sub) {
         userID = user?.sub.split("|")[1];
       }
+      if (user?.nickname) {
+        tempName = user?.nickname;
+      }
       console.log(userID);
-      const { data, error } = await getProfile(accessToken, userID);
+      var form = new FormData();
+      form.append("UserID", userID);
+      form.append("TempName", tempName);
+      const { data, error } = await getProfile(accessToken, form);
       if (!isMounted) {
         return;
       }
@@ -138,26 +145,6 @@ export default function Profile() {
                       </div>
                     ))}
                   </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-span-1">
-              <div className="p-8 bg-gray-800 rounded-lg shadow-lg">
-                <h3 className="mb-4 text-base font-bold text-white">Freunde</h3>
-                <div className="flex flex-wrap">
-                  <div className="w-8 h-8 m-1 bg-gray-700 rounded-full"></div>
-                  <div className="w-8 h-8 m-1 bg-gray-700 rounded-full"></div>
-                  <div className="w-8 h-8 m-1 bg-gray-700 rounded-full"></div>
-                  <div className="w-8 h-8 m-1 bg-gray-700 rounded-full"></div>
-                </div>
-                <h3 className="mt-8 mb-4 text-base font-bold text-white">
-                  Community
-                </h3>
-                <div className="flex flex-wrap">
-                  <div className="w-8 h-8 m-1 bg-gray-700 rounded-full"></div>
-                  <div className="w-8 h-8 m-1 bg-gray-700 rounded-full"></div>
-                  <div className="w-8 h-8 m-1 bg-gray-700 rounded-full"></div>
-                  <div className="w-8 h-8 m-1 bg-gray-700 rounded-full"></div>
                 </div>
               </div>
             </div>
