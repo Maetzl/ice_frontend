@@ -5,22 +5,23 @@ import AWS from "aws-sdk";
 
 export default function PublishYourGames() {
   const { user, getAccessTokenSilently } = useAuth0();
-  const [gameName, setGameName] = useState("");
-  const [gameDescription, setGameDescription] = useState("");
-  const [price, setPrice] = useState<number>(0);
+
+  const [game, setGame] = useState({ name: "", description: "", price: 0 });
+
   const [priceError, setPriceError] = useState<string>("");
   const [selectedImages, setSelectedImage] = useState<File[] | null>(null);
   const [isFormValid, setIsFormValid] = useState(false);
-  const [imgLinks, setImgLinks] = useState<string[]>([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [tempTag, setTempTag] = useState("");
   const [tagError, setTagError] = useState<string>("");
+
   const bucketName = "icegaming";
   const currentDate = new Date();
   const accessKeyId = process.env.REACT_APP_AWS_ACCESS_KEY_ID;
   const secretAccessKey = process.env.REACT_APP_AWS_SECRET_ACCESS_KEY;
   const region = process.env.REACT_APP_AWS_REGION;
+
   AWS.config.update({
     accessKeyId: accessKeyId,
     secretAccessKey: secretAccessKey,
@@ -30,15 +31,15 @@ export default function PublishYourGames() {
 
   useEffect(() => {
     setIsFormValid(
-      gameName.trim().length > 0 &&
-        gameDescription.trim().length > 0 &&
-        !isNaN(price) &&
-        price >= 0 &&
+      game.name.trim().length > 0 &&
+        game.description.trim().length > 0 &&
+        !isNaN(game.price) &&
+        game.price >= 0 &&
         selectedImages != null &&
         selectedImages.length > 0 &&
         selectedImages.length <= 7
     );
-  }, [gameName, gameDescription, price, selectedImages]);
+  }, [game, selectedImages]);
 
   const publishGame = async (e: { preventDefault: () => void }) => {
     if (!user || !selectedImages || !isFormValid) {
@@ -52,22 +53,22 @@ export default function PublishYourGames() {
       const accessToken = await getAccessTokenSilently();
       const userID = user.sub?.split("|")[1] || "";
       const gameID = generateUniqueGameID();
-      await uploadImageToS3games(gameID, selectedImages);
+      const links = (await uploadImageToS3games(gameID, selectedImages)) || "";
       const date = `${currentDate.getDate()}/${
         currentDate.getMonth() + 1
       }/${currentDate.getFullYear()}`;
 
       var form = new FormData();
       form.append("GameID", gameID);
-      form.append("Name", gameName);
-      form.append("Description", gameDescription);
-      form.append("Price", price.toString());
+      form.append("Name", game.name);
+      form.append("Description", game.description);
+      form.append("Price", game.price.toString());
       form.append("DeveloperID", userID);
-      form.append("Images", imgLinks.toString());
+      form.append("Images", links.toString());
       form.append("Tags", tags.toString());
       form.append("ReleaseDate", date);
 
-      console.log(imgLinks);
+      console.log(links);
 
       const { data, error } = await createGame(accessToken, form);
       console.log("Game data successfully uploaded.");
@@ -80,7 +81,7 @@ export default function PublishYourGames() {
 
   function generateUniqueGameID() {
     const timestamp = new Date().getTime();
-    const uniqueID = `${gameName
+    const uniqueID = `${game.name
       .replace(/\s+/g, "-")
       .toLowerCase()}-${timestamp}`;
     return uniqueID;
@@ -112,7 +113,7 @@ export default function PublishYourGames() {
   const uploadImageToS3games = async (
     gameID: string,
     selectedFiles: File[] | null
-  ) => {
+  ): Promise<string[] | undefined> => {
     const updatedImgLink = [];
 
     if (!selectedFiles) return;
@@ -142,31 +143,30 @@ export default function PublishYourGames() {
         });
 
         console.log("Bild erfolgreich hochgeladen.");
-        updatedImgLink.push(uploadURL);
+        updatedImgLink.push(
+          `https://icegaming.s3.eu-central-1.amazonaws.com/games/${gameID}/${file.name}`
+        );
         // Füge hier den Code hinzu, den du nach dem Hochladen des Bildes ausführen möchtest
       } catch (error) {
         console.error("Fehler beim Hochladen des Bildes:", error);
         // Füge hier den Code hinzu, um mit dem Fehler umzugehen
       }
     }
-    console.log("updated Links", updatedImgLink);
-    setImgLinks(updatedImgLink);
+    return updatedImgLink;
   };
 
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputPrice = parseFloat(e.target.value);
     if (isNaN(inputPrice)) {
       setPriceError("Please enter a valid number for the price.");
-      setPrice(0);
     } else if (inputPrice < 0) {
       setPriceError("Price can't be lower than 0");
-      setPrice(inputPrice);
     } else {
-      setPrice(inputPrice);
       setPriceError("");
     }
+    setGame((prev) => ({ ...prev, price: inputPrice }));
   };
-  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Handle Submit here");
@@ -224,6 +224,10 @@ export default function PublishYourGames() {
     }
   };
 
+  const handleOnChange = (e: any) => {
+    setGame((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
   return (
     <div className="min-h-screen bg-gray-900">
       <header className="py-4 bg-gray-800">
@@ -240,9 +244,10 @@ export default function PublishYourGames() {
             <input
               type="text"
               id="gameName"
+              name="name"
               className="w-full px-3 py-2 text-white bg-gray-700 border rounded-lg"
-              value={gameName}
-              onChange={(e) => setGameName(e.target.value)}
+              value={game.name}
+              onChange={handleOnChange}
             />
           </div>
           <div className="mb-4">
@@ -251,9 +256,10 @@ export default function PublishYourGames() {
             </label>
             <textarea
               id="gameDescription"
+              name="description"
               className="w-full px-3 py-2 text-white bg-gray-700 border rounded-lg"
-              value={gameDescription}
-              onChange={(e) => setGameDescription(e.target.value)}
+              value={game.description}
+              onChange={handleOnChange}
             ></textarea>
           </div>
           <div>
@@ -263,7 +269,7 @@ export default function PublishYourGames() {
             <input
               type="number"
               id="price"
-              value={price}
+              value={game.price}
               onChange={handlePriceChange}
               step="0.01"
               className="text-white pl-1 bg-gray-700 border rounded-lg"
