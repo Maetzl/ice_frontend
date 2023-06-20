@@ -4,6 +4,7 @@ import Index from "./pages/Index";
 import { AuthenticationGuard } from "./components/Authentication_Guard";
 import Profile from "./pages/Profile";
 import Store from "./pages/Store";
+import Basket from "./pages/Basket";
 import Navigation from "./components/Navigation";
 import Footer from "./components/Footer";
 import Library from "./pages/Library";
@@ -30,6 +31,10 @@ function App() {
         <Route
           path="/publish"
           element={<AuthenticationGuard component={PublishYourGames} />}
+        />
+        <Route
+          path="/basket"
+          element={<AuthenticationGuard component={Basket} />}
         />
         <Route path="/contact" element={<Contact />} />
         <Route path="/placeholder" element={<Placeholder />} />
