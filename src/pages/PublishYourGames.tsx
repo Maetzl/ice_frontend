@@ -5,18 +5,23 @@ import AWS from "aws-sdk";
 
 export default function PublishYourGames() {
   const { user, getAccessTokenSilently } = useAuth0();
-  const [gameName, setGameName] = useState("");
-  const [gameDescription, setGameDescription] = useState("");
-  const [price, setPrice] = useState<number>(0);
+
+  const [game, setGame] = useState({ name: "", description: "", price: 0 });
+
   const [priceError, setPriceError] = useState<string>("");
-  const [developerName, setDeveloperName] = useState("");
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [selectedImages, setSelectedImage] = useState<File[] | null>(null);
   const [isFormValid, setIsFormValid] = useState(false);
-  const [imgLink, setImgLink] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [tags, setTags] = useState<string[]>([]);
+  const [tempTag, setTempTag] = useState("");
+  const [tagError, setTagError] = useState<string>("");
+
   const bucketName = "icegaming";
+  const currentDate = new Date();
   const accessKeyId = process.env.REACT_APP_AWS_ACCESS_KEY_ID;
   const secretAccessKey = process.env.REACT_APP_AWS_SECRET_ACCESS_KEY;
   const region = process.env.REACT_APP_AWS_REGION;
+
   AWS.config.update({
     accessKeyId: accessKeyId,
     secretAccessKey: secretAccessKey,
@@ -26,14 +31,18 @@ export default function PublishYourGames() {
 
   useEffect(() => {
     setIsFormValid(
-      gameName.trim().length > 0 &&
-        gameDescription.trim().length > 0 &&
-        !isNaN(price)
+      game.name.trim().length > 0 &&
+        game.description.trim().length > 0 &&
+        !isNaN(game.price) &&
+        game.price >= 0 &&
+        selectedImages != null &&
+        selectedImages.length > 0 &&
+        selectedImages.length <= 7
     );
-  }, [gameName, gameDescription, price]);
+  }, [game, selectedImages]);
 
   const publishGame = async (e: { preventDefault: () => void }) => {
-    if (!user || !selectedImage || !isFormValid) {
+    if (!user || !selectedImages || !isFormValid) {
       console.error(
         "Error: Please ensure all fields are filled in correctly and try again."
       );
@@ -44,18 +53,22 @@ export default function PublishYourGames() {
       const accessToken = await getAccessTokenSilently();
       const userID = user.sub?.split("|")[1] || "";
       const gameID = generateUniqueGameID();
-      setImgLink(`games/${gameID}`);
-      uploadImageToS3games(gameID, selectedImage);
+      const links = (await uploadImageToS3games(gameID, selectedImages)) || "";
+      const date = `${currentDate.getDate()}/${
+        currentDate.getMonth() + 1
+      }/${currentDate.getFullYear()}`;
 
       var form = new FormData();
       form.append("GameID", gameID);
-      form.append("Name", gameName);
-      form.append("Description", gameDescription);
-      form.append("Price", price.toString());
+      form.append("Name", game.name);
+      form.append("Description", game.description);
+      form.append("Price", game.price.toString());
       form.append("DeveloperID", userID);
-      form.append("Images", [imgLink, "link2", "link3"].toString());
-      form.append("Tags", ["Survival", "Multiplayer", "Action"].toString());
-      form.append("ReleaseDate", "a date idk");
+      form.append("Images", links.toString());
+      form.append("Tags", tags.toString());
+      form.append("ReleaseDate", date);
+
+      console.log(links);
 
       const { data, error } = await createGame(accessToken, form);
       console.log("Game data successfully uploaded.");
@@ -68,59 +81,92 @@ export default function PublishYourGames() {
 
   function generateUniqueGameID() {
     const timestamp = new Date().getTime();
-    const uniqueID = `${gameName
+    const uniqueID = `${game.name
       .replace(/\s+/g, "-")
       .toLowerCase()}-${timestamp}`;
     return uniqueID;
   }
 
-  const handleImageChange = (e: { target: { files: FileList | null } }) => {
+  const handleImagesChange = (e: { target: { files: FileList | null } }) => {
     if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0];
-      setSelectedImage(file);
+      if (e.target.files.length > 7) {
+        setErrorMessage("Es können maximal 7 Bilder hochgeladen werden.");
+        return;
+      }
+      setErrorMessage("");
+
+      let fileNumber = 0;
+      const files =
+        e.target.files instanceof FileList
+          ? Array.from(e.target.files).map((file) => {
+              const newName = `${fileNumber++}`;
+              return new File([file], newName, { type: file.type });
+            })
+          : e.target.files;
+
+      setSelectedImage(files);
+    } else {
+      setSelectedImage(null);
     }
   };
 
   const uploadImageToS3games = async (
     gameID: string,
-    selectedFile: File | null
-  ) => {
-    setImgLink(`games/${gameID}`);
-    const params = {
-      Bucket: bucketName,
-      Key: `games/${gameID}`,
-      ContentType: selectedFile?.type,
-      Expires: 120,
-    };
+    selectedFiles: File[] | null
+  ): Promise<string[] | undefined> => {
+    const updatedImgLink = [];
 
-    try {
-      const uploadURL = await s3.getSignedUrlPromise("putObject", params);
-      console.log("Bild erfolgreich hochgeladen:", uploadURL);
+    if (!selectedFiles) return;
 
-      // Hochladen des Bildes mithilfe der generierten Upload-URL
-      await fetch(uploadURL, {
-        method: "PUT",
-        body: selectedFile,
-      });
-
-      console.log("Bild erfolgreich hochgeladen.");
-      // Füge hier den Code hinzu, den du nach dem Hochladen des Bildes ausführen möchtest
-    } catch (error) {
-      console.error("Fehler beim Hochladen des Bildes:", error);
-      // Füge hier den Code hinzu, um mit dem Fehler umzugehen
+    if (selectedFiles.length > 7) {
+      console.error("Es können maximal 7 Bilder hochgeladen werden.");
+      return;
     }
+
+    for (const file of selectedFiles) {
+      const params = {
+        Bucket: bucketName,
+        Key: `games/${gameID}/${file.name}`,
+        ContentType: file?.type,
+        Expires: 120,
+      };
+
+      try {
+        const uploadURL = await s3.getSignedUrlPromise("putObject", params);
+
+        console.log("Bild erfolgreich hochgeladen:", uploadURL);
+
+        // Hochladen des Bildes mithilfe der generierten Upload-URL
+        await fetch(uploadURL, {
+          method: "PUT",
+          body: file,
+        });
+
+        console.log("Bild erfolgreich hochgeladen.");
+        updatedImgLink.push(
+          `https://icegaming.s3.eu-central-1.amazonaws.com/games/${gameID}/${file.name}`
+        );
+        // Füge hier den Code hinzu, den du nach dem Hochladen des Bildes ausführen möchtest
+      } catch (error) {
+        console.error("Fehler beim Hochladen des Bildes:", error);
+        // Füge hier den Code hinzu, um mit dem Fehler umzugehen
+      }
+    }
+    return updatedImgLink;
   };
+
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputPrice = parseFloat(e.target.value);
-    console.log("Hieer", inputPrice);
     if (isNaN(inputPrice)) {
       setPriceError("Please enter a valid number for the price.");
-      setPrice(0);
+    } else if (inputPrice < 0) {
+      setPriceError("Price can't be lower than 0");
     } else {
-      setPrice(inputPrice);
       setPriceError("");
     }
+    setGame((prev) => ({ ...prev, price: inputPrice }));
   };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Handle Submit here");
@@ -131,6 +177,55 @@ export default function PublishYourGames() {
       console.error("Error submitting form:", error);
       // Handle the error
     }
+  };
+
+  const handleTagChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const tag = e.target.value;
+    setTempTag(tag);
+  };
+
+  function handleDeleteTag(index: number): void {
+    const updatedTags = [...tags];
+    // Entferne das Tag mit dem angegebenen Index
+    updatedTags.splice(index, 1);
+    // Aktualisiere den State mit dem aktualisierten Tags-Array
+    setTags(updatedTags);
+  }
+
+  function handleAddTag(): void {
+    if (tags.length > 9) {
+      setTagError("Too many tags. Maximum tag count is 10.");
+      setTempTag("");
+      return;
+    }
+
+    if (tempTag.trim() != "") {
+      const tagExists = tags.find(
+        (tag) => tag.toLowerCase() === tempTag.toLowerCase()
+      );
+
+      if (tagExists) {
+        // Wenn das Tag bereits vorhanden ist, füge hier die entsprechende Logik hinzu
+        setTagError("Tag already exists");
+        setTempTag("");
+      } else {
+        // Füge das Tag dem Array hinzu
+        setTagError("");
+        setTags([...tags, tempTag]);
+        setTempTag("");
+      }
+    }
+  }
+
+  const handleKeyDownTag = (e: { key: string }) => {
+    if (e.key === "Enter") {
+      // Methode ausführen, wenn Enter gedrückt wird
+      handleAddTag();
+    }
+  };
+
+  const handleOnChange = (e: any) => {
+    setGame((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   return (
@@ -149,9 +244,10 @@ export default function PublishYourGames() {
             <input
               type="text"
               id="gameName"
+              name="name"
               className="w-full px-3 py-2 text-white bg-gray-700 border rounded-lg"
-              value={gameName}
-              onChange={(e) => setGameName(e.target.value)}
+              value={game.name}
+              onChange={handleOnChange}
             />
           </div>
           <div className="mb-4">
@@ -160,9 +256,10 @@ export default function PublishYourGames() {
             </label>
             <textarea
               id="gameDescription"
+              name="description"
               className="w-full px-3 py-2 text-white bg-gray-700 border rounded-lg"
-              value={gameDescription}
-              onChange={(e) => setGameDescription(e.target.value)}
+              value={game.description}
+              onChange={handleOnChange}
             ></textarea>
           </div>
           <div>
@@ -172,24 +269,46 @@ export default function PublishYourGames() {
             <input
               type="number"
               id="price"
-              value={price}
+              value={game.price}
               onChange={handlePriceChange}
               step="0.01"
-              style={{ backgroundColor: "black", color: "white" }}
+              className="text-white pl-1 bg-gray-700 border rounded-lg"
             />
-            {priceError && <p>{priceError}</p>}
+            {priceError && <p className="text-red-500">{priceError}</p>}
           </div>
-          <div className="mb-4">
-            <label htmlFor="developerName" className="block mb-2 text-white">
-              Developer Name
+          <div className="mb-4 space-y-1">
+            <label htmlFor="service" className="block mb-2 text-white">
+              Tags
             </label>
-            <input
-              type="text"
-              id="developerName"
-              className="w-full px-3 py-2 text-white bg-gray-700 border rounded-lg"
-              value={developerName}
-              onChange={(e) => setDeveloperName(e.target.value)}
-            />
+            <div className="space-x-1">
+              <input
+                onChange={handleTagChange}
+                onKeyDown={handleKeyDownTag}
+                value={tempTag}
+                className="text-white pl-1 bg-gray-700 border rounded-lg"
+              ></input>
+              <button
+                id="addTag"
+                type="button"
+                className="px-2 text-white  bg-gray-700 border rounded-lg"
+                onClick={() => handleAddTag()}
+              >
+                Add Tag
+              </button>
+            </div>
+            <div className="space-x-1">
+              {tags.map((singleTag, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  onClick={() => handleDeleteTag(index)}
+                  className="px-2 py-1 text-white  bg-gray-700 border rounded-lg"
+                >
+                  <span>{singleTag}</span>
+                </button>
+              ))}
+            </div>
+            {tagError && <p className="text-red-500">{tagError}</p>}
           </div>
           <div className="mb-4">
             <label htmlFor="gameImage" className="block mb-2 text-white">
@@ -200,13 +319,14 @@ export default function PublishYourGames() {
               id="gameImage"
               className="text-white"
               accept="image/*"
-              onChange={handleImageChange}
-              disabled={!isFormValid}
+              multiple
+              onChange={handleImagesChange}
             />
           </div>
+          {errorMessage && <p className="text-red-500">{errorMessage}</p>}
           <button
             type="submit"
-            className="px-4 py-2 text-white bg-gray-800 rounded-lg"
+            className="px-4 py-2 text-gray-800 bg-gray-300 rounded-lg disabled:bg-gray-800 disabled:text-gray-100"
             disabled={!isFormValid}
           >
             Publish Game
