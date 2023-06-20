@@ -2,15 +2,18 @@
 import React, { useEffect, useState } from "react";
 import "../App.css";
 import { getAllGames } from "../services/game_service";
+import { useAuth0 } from "@auth0/auth0-react";
+import { getBasket } from "../services/profile_service";
 
 const Basket: React.FC = () => {
     const [myGames, setmyGames] = useState([{name: "Game 1", description: "Game 1des", price: 11}]);
-
+    const { user, getAccessTokenSilently } = useAuth0();
     //Use Effect benutzen für backend
     useEffect(() => {
         let isMounted = true;
         const getMessage = async () => {
-            const { data, error } = await getAllGames();
+            const accessToken = await getAccessTokenSilently();
+            const { data, error } = await getBasket(accessToken);
             console.log("data", data);
             setmyGames(data)            /*
             if (!isMounted) {
@@ -29,7 +32,7 @@ const Basket: React.FC = () => {
         return () => {
             isMounted = false;
         };
-    }, [getAllGames]);
+    }, [getBasket, getAccessTokenSilently]);
 
     return (
         <div className="flex justify-center items-start bg-[#070231] min-h-screen">
