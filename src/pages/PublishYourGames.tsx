@@ -42,9 +42,9 @@ export default function PublishYourGames() {
 
     try {
       const accessToken = await getAccessTokenSilently();
-      const userID = user.sub?.split("|")[1];
+      const userID = user.sub?.split("|")[1] || "";
       const gameID = generateUniqueGameID();
-
+      setImgLink(`games/${gameID}`);
       uploadImageToS3games(gameID, selectedImage);
 
       var form = new FormData();
@@ -52,11 +52,14 @@ export default function PublishYourGames() {
       form.append("Name", gameName);
       form.append("Description", gameDescription);
       form.append("Price", price.toString());
-      form.append("DeveloperName", developerName);
-      form.append("Images", imgLink);
+      form.append("DeveloperID", userID);
+      form.append("Images", [imgLink, "link2", "link3"].toString());
+      form.append("Tags", ["Survival", "Multiplayer", "Action"].toString());
+      form.append("ReleaseDate", "a date idk");
 
       const { data, error } = await createGame(accessToken, form);
       console.log("Game data successfully uploaded.");
+      // redirect here TODO NAVIGATE
     } catch (error) {
       console.error("Error uploading game data or image:", error);
       // Handle the error
@@ -85,7 +88,7 @@ export default function PublishYourGames() {
     setImgLink(`games/${gameID}`);
     const params = {
       Bucket: bucketName,
-      Key: imgLink,
+      Key: `games/${gameID}`,
       ContentType: selectedFile?.type,
       Expires: 120,
     };
@@ -162,7 +165,7 @@ export default function PublishYourGames() {
               onChange={(e) => setGameDescription(e.target.value)}
             ></textarea>
           </div>
-          <div className="mb-4">
+          <div>
             <label htmlFor="price" className="block mb-2 text-white">
               Price in €
             </label>
@@ -172,6 +175,7 @@ export default function PublishYourGames() {
               value={price}
               onChange={handlePriceChange}
               step="0.01"
+              style={{ backgroundColor: "black", color: "white" }}
             />
             {priceError && <p>{priceError}</p>}
           </div>

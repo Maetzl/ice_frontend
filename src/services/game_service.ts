@@ -6,7 +6,7 @@ const getGame = async (accessToken: string, gameID: any) => {
     var form = new FormData();
     form.append("GameID", gameID);
   const config = {
-    url: `${apiServerUrl}/api/game`,
+    url: `${apiServerUrl}/api/games`,
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -21,13 +21,29 @@ const getGame = async (accessToken: string, gameID: any) => {
     error,
   };
 };
+const getAllGames = async () => {
+const config = {
+  url: `${apiServerUrl}/api/games`,
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    
+  },
+  
+};
 
+const { data, error } = await callExternalApi({ config });
+return {
+  data: data || null,
+  error,
+};
+};
 const createGame = async (
   accessToken: string,
   gameData: FormData
 ) => {
   const config = {
-    url: `${apiServerUrl}/api/game/update`,
+    url: `${apiServerUrl}/api/games/publish`,
     method: "POST",
     headers: {
       "content-type": "application/json",
@@ -43,4 +59,4 @@ const createGame = async (
   };
 };
 
-export { getGame, createGame };
+export { getGame, createGame, getAllGames };
