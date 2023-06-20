@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import AWS from "aws-sdk";
 import { useAuth0 } from "@auth0/auth0-react";
 import { updateProfile } from "../services/profile_service";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function EditData() {
   let data = useLocation();
@@ -12,6 +12,7 @@ export default function EditData() {
   const [description, setDescription] = useState("");
   const [favoriteGame, setFavoriteGame] = useState("");
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const navigate = useNavigate();
   var userID = "";
   // AWS Stuff
   const bucketName = "icegaming";
@@ -83,6 +84,7 @@ export default function EditData() {
     const { data, error } = await updateProfile(accessToken, form);
 
     if (data) {
+      navigate("/profile");
     }
 
     if (error) {

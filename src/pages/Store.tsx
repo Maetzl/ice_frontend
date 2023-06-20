@@ -1,73 +1,56 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../App.css";
 import { getAllGames } from "../services/game_service";
 
+interface Game {
+  description: string;
+  developerID: string;
+  developerName: string;
+  gameID: string;
+  images: string[];
+  name: string;
+  price: string;
+  releaseDate: string;
+  tags: string[];
+  _id: string;
+}
+
 const Store: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const games = [
-    { id: 1, name: "Game 1", image: null },
-    { id: 2, name: "Game 2", image: null },
-    { id: 3, name: "Game 3", image: null },
-    { id: 4, name: "Game 4", image: null },
-    { id: 5, name: "Game 1", image: null },
-    { id: 6, name: "Game 2", image: null },
-    { id: 7, name: "Game 3", image: null },
-    { id: 8, name: "Game 4", image: null },
-    { id: 9, name: "Game 1", image: null },
-    { id: 10, name: "Game 2", image: null },
-    { id: 11, name: "Game 3", image: null },
-    { id: 12, name: "Game 4", image: null },
-    { id: 13, name: "Game 1", image: null },
-    { id: 14, name: "Game 2", image: null },
-    { id: 15, name: "Game 3", image: null },
-    { id: 16, name: "Game 4", image: null },
-    { id: 17, name: "Game 1", image: null },
-    { id: 18, name: "Game 2", image: null },
-    { id: 19, name: "Game 3", image: null },
-    { id: 20, name: "Game 4", image: null },
-    { id: 21, name: "Game 1", image: null },
-    { id: 22, name: "Game 2", image: null },
-    { id: 23, name: "Game 3", image: null },
-    { id: 24, name: "Game 4", image: null },
-    { id: 25, name: "Game 1", image: null },
-    { id: 26, name: "Game 2", image: null },
-    { id: 27, name: "Game 3", image: null },
-    { id: 28, name: "Game 4", image: null },
-    { id: 29, name: "Game 1", image: null },
-    { id: 30, name: "Game 2", image: null },
-    { id: 31, name: "Game 3", image: null },
-    { id: 32, name: "Game 4", image: null },
-  ];
-  //USe Effect benutzen für backend
+  const [maxPrice, setMaxPrice] = useState<number | null>(null);
+  const [games, setGames] = useState<Game[]>([]);
+
   useEffect(() => {
-    let isMounted = true;
-    const getMessage = async () => {
+    const fetchGames = async () => {
       const { data, error } = await getAllGames();
-      console.log("Games HEre", data);
-      /*
-      if (!isMounted) {
-        return;
-      }
       if (data) {
-        setUserData(JSON.stringify(data, null, 2));
+        setGames(data);
       }
       if (error) {
-        setUserData(JSON.stringify(error, null, 2));
+        console.log("Error fetching games:", error);
       }
-      setIsLoading(false);
-      */
     };
-    getMessage();
-    return () => {
-      isMounted = false;
-    };
-  }, [getAllGames]);
-  const filteredGames = games.filter((game) =>
-    game.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+
+    fetchGames();
+  }, []);
+
+  const filteredGames = games.filter((game) => {
+    const isMatchedName = game.name
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    const isMatchedPrice =
+      maxPrice === null || parseFloat(game.price) <= maxPrice;
+    return isMatchedName && isMatchedPrice;
+  });
+
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
+
+  const handleMaxPriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setMaxPrice(parseFloat(event.target.value));
+  };
+
   return (
     <div className="flex justify-center items-start bg-[#070231] min-h-screen">
       <div className="bg-[#050125] min-h-screen">
@@ -84,17 +67,39 @@ const Store: React.FC = () => {
             />
           </div>
 
+          <div className="w-2/3 mb-8 md:w-1/2">
+            <div className="flex items-center">
+              <input
+                className="w-1/2 mr-2"
+                type="range"
+                min="1"
+                max="100"
+                step="0.1"
+                value={maxPrice || ""}
+                onChange={handleMaxPriceChange}
+              />
+              <span className="text-white">{`${maxPrice}€`}</span>
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-            {filteredGames.map((game) => (
-              <div className="flex flex-col items-center game" key={game.id}>
-                <img
-                  className="object-cover w-full h-auto"
-                  src="https://icegaming.s3.eu-central-1.amazonaws.com/logo/iceLogo.png"
-                  alt={game.name}
-                />
-                <p className="mt-2 text-white">{game.name}</p>
-              </div>
-            ))}
+            {filteredGames.length > 0 ? (
+              filteredGames.map((game) => (
+                <div className="flex flex-col items-center game" key={game._id}>
+                  <img
+                    className="object-cover w-full h-auto"
+                    src={`https://icegaming.s3.eu-central-1.amazonaws.com/${game.images[0]}`}
+                    alt={game.name}
+                  />
+                  <p className="mt-2 text-white">{game.name}</p>
+                  <p className="mt-1 text-white">
+                    Price: ${game.price} | Developer: {game.developerName}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <p className="text-white">No games found.</p>
+            )}
           </div>
         </div>
       </div>
