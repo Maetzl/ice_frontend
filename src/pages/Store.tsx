@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../App.css";
 import { getAllGames } from "../services/game_service";
+import { Link } from "react-router-dom";
 
 interface Game {
   description: string;
@@ -78,7 +79,7 @@ const Store: React.FC = () => {
                 value={maxPrice || ""}
                 onChange={handleMaxPriceChange}
               />
-              <span className="text-white">{`${maxPrice}€`}</span>
+              <span className="text-white">{`${maxPrice || 50}€`}</span>
             </div>
           </div>
 
@@ -86,11 +87,13 @@ const Store: React.FC = () => {
             {filteredGames.length > 0 ? (
               filteredGames.map((game) => (
                 <div className="flex flex-col items-center game" key={game._id}>
-                  <img
-                    className="object-cover w-full h-auto"
-                    src={`https://icegaming.s3.eu-central-1.amazonaws.com/${game.images[0]}`}
-                    alt={game.name}
-                  />
+                  <Link to="/">
+                    <img
+                      className="object-cover w-full h-auto"
+                      src={`https://icegaming.s3.eu-central-1.amazonaws.com/${game.images[0]}`}
+                      alt={game.name}
+                    />
+                  </Link>
                   <p className="mt-2 text-white">{game.name}</p>
                   <p className="mt-1 text-white">
                     Price: ${game.price} | Developer: {game.developerName}
