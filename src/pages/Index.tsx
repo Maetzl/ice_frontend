@@ -6,32 +6,34 @@ export default function Index() {
 
   return (
     <div>
-      <section className="bg-gray-200 py-16">
+      <section className="py-16 bg-gradient-to-b from-blue-200 to-blue-400">
         <div className="container mx-auto text-center">
-          <h1 className="text-4xl font-bold mb-4">
+          <h1 className="mb-4 text-4xl font-bold text-white">
             Welcome to the Gaming Marketplace
           </h1>
-          <p className="text-lg text-gray-700 mb-8">
+          <p className="mb-8 text-lg text-gray-100">
             Discover, play, and publish games.
           </p>
           <a
             href="/store"
-            className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-md text-lg"
+            className="px-6 py-3 text-lg font-bold text-white transition-colors duration-300 ease-in-out bg-blue-600 rounded-md shadow-md hover:bg-blue-700"
           >
             Explore the Store
           </a>
         </div>
       </section>
 
-      <section className="container mx-auto py-16">
-        <div className="flex justify-center mb-8">
-          <div className="w-1/3">
+      <section className="py-16 bg-gradient-to-b from-blue-400 to-blue-200">
+        <div className="container flex justify-center mx-auto mb-8">
+          <div className="w-1/3 mx-auto">
+            {" "}
+            {/* Added mx-auto class */}
             <img
-              src="/path/to/game1.jpg"
+              src="https://icegaming.s3.eu-central-1.amazonaws.com/LandingPage/GodOfWarRagnaroek_Aufmacher-11c9da9ce44e5ef0.png"
               alt="Game 1"
-              className="mb-4 rounded-lg"
+              className="object-cover h-64 mb-4 rounded-lg"
             />
-            <h2 className="text-2xl font-bold mb-4">
+            <h2 className="mb-4 text-2xl font-bold">
               Find Your Favorite Games
             </h2>
             <p className="text-lg text-gray-700">
@@ -39,25 +41,29 @@ export default function Index() {
               your library.
             </p>
           </div>
-          <div className="w-1/3">
+          <div className="w-1/3 mx-auto">
+            {" "}
+            {/* Added mx-auto class */}
             <img
-              src="/path/to/game2.jpg"
+              src="https://icegaming.s3.eu-central-1.amazonaws.com/LandingPage/eldenring.jpg"
               alt="Game 2"
-              className="mb-4 rounded-lg"
+              className="object-cover h-64 mb-4 rounded-lg"
             />
-            <h2 className="text-2xl font-bold mb-4">Publish Your Games</h2>
+            <h2 className="mb-4 text-2xl font-bold">Publish Your Games</h2>
             <p className="text-lg text-gray-700">
               Share your own games with the gaming community and reach a wide
               audience.
             </p>
           </div>
-          <div className="w-1/3">
+          <div className="w-1/3 mx-auto">
+            {" "}
+            {/* Added mx-auto class */}
             <img
-              src="/path/to/game3.jpg"
+              src="https://icegaming.s3.eu-central-1.amazonaws.com/LandingPage/armored-core-6-ankuendigung_6209199-840x480.jpg"
               alt="Game 3"
-              className="mb-4 rounded-lg"
+              className="object-cover h-64 mb-4 rounded-lg"
             />
-            <h2 className="text-2xl font-bold mb-4">Connect with Gamers</h2>
+            <h2 className="mb-4 text-2xl font-bold">Connect with Gamers</h2>
             <p className="text-lg text-gray-700">
               Interact with other gamers, join communities, and discover new
               gaming experiences.
