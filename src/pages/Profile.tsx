@@ -5,13 +5,6 @@ import { Link } from "react-router-dom";
 
 export default function Profile() {
   const [userData, setUserData] = useState("");
-  const [gameTimes, setGameTimes] = useState([
-    { name: "Spiel 1", time: "0 Stunden" },
-    { name: "Spiel 2", time: "0 Stunden" },
-    { name: "Spiel 3", time: "0 Stunden" },
-    { name: "Spiel 4", time: "0 Stunden" },
-  ]);
-  const [favoriteGameTime, setFavoriteGameTime] = useState("0 Stunden");
   const [isLoading, setIsLoading] = useState(true); // Zustand für die Ladeanzeige
   const { user, getAccessTokenSilently } = useAuth0();
 
@@ -27,7 +20,6 @@ export default function Profile() {
       if (user?.nickname) {
         tempName = user?.nickname;
       }
-      console.log(userID);
       var form = new FormData();
       form.append("UserID", userID);
       form.append("TempName", tempName);
@@ -49,9 +41,11 @@ export default function Profile() {
     };
   }, [getAccessTokenSilently]);
   if (isLoading) {
-    // Ladeanzeige anzeigen, solange isLoading true ist
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div
+        className="flex items-center justify-center min-h-screen"
+        data-testid="loading-spinner"
+      >
         <div className="w-64 h-64 ease-linear border-8 border-t-8 border-gray-200 rounded-full loader"></div>
       </div>
     );
@@ -63,7 +57,7 @@ export default function Profile() {
     const userID = user?.sub?.toString().split("|")[1];
     const imageSrc = `https://icegaming.s3.eu-central-1.amazonaws.com/profilepictures/PB${userID}`;
     console.log(userDataObject._id);
-    console.log("imgURL:", imageSrc);
+    console.log(imageSrc);
     return (
       <div className="min-h-screen bg-gray-900">
         <header className="py-4 bg-gray-800">
@@ -109,41 +103,6 @@ export default function Profile() {
                         Country: {userDataObject.country}
                       </p>
                     </div>
-                  </div>
-                </div>
-                <div className="mt-8">
-                  <h3 className="mb-4 text-xl font-bold text-white">
-                    Lieblingsspiel
-                  </h3>
-                  <div className="w-24 h-24 bg-gray-700 rounded-lg">
-                    <div className="flex flex-col justify-between h-full p-2">
-                      <div className="text-white">{favoriteGameTime}</div>
-                      <div className="text-xs text-gray-400">Spielname</div>
-                    </div>
-                  </div>
-                </div>
-                <div className="mt-8">
-                  <h3 className="mb-4 text-xl font-bold text-white">Spiele</h3>
-                  <input
-                    className="px-3 py-2 text-white bg-gray-700 border rounded-lg w-50"
-                    type="text"
-                    id="spiele"
-                    placeholder="Suche nach Spiel"
-                  />
-                  <div className="flex flex-wrap mt-4">
-                    {gameTimes.map((game, index) => (
-                      <div
-                        key={index}
-                        className="w-24 h-24 m-2 bg-gray-700 rounded-lg"
-                      >
-                        <div className="flex flex-col justify-between h-full p-2">
-                          <div className="text-white">{game.name}</div>
-                          <div className="text-xs text-gray-400">
-                            {game.time}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
                   </div>
                 </div>
               </div>
