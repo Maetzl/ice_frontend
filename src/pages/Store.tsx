@@ -18,6 +18,7 @@ interface Game {
 
 const Store: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [tagSearchTerm, setTagSearchTerm] = useState<string[]>([]);
   const [maxPrice, setMaxPrice] = useState<number | null>(null);
   const [games, setGames] = useState<Game[]>([]);
 
@@ -41,11 +42,23 @@ const Store: React.FC = () => {
       .includes(searchTerm.toLowerCase());
     const isMatchedPrice =
       maxPrice === null || parseFloat(game.price) <= maxPrice;
-    return isMatchedName && isMatchedPrice;
+    const isMatchedTags =
+      tagSearchTerm.length === 0 ||
+      tagSearchTerm.some((searchTag) =>
+        game.tags.some((tag) =>
+          tag.toLowerCase().includes(searchTag.toLowerCase())
+        )
+      );
+    return isMatchedName && isMatchedPrice && isMatchedTags;
   });
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
+  };
+
+  const handleTagSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const tags = event.target.value.split(",");
+    setTagSearchTerm(tags);
   };
 
   const handleMaxPriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,6 +78,16 @@ const Store: React.FC = () => {
               placeholder="Search"
               value={searchTerm}
               onChange={handleSearch}
+            />
+          </div>
+
+          <div className="w-2/3 mb-4 md:w-1/2">
+            <input
+              className="w-full p-4 border-none bg-white text-[#283046] rounded-5"
+              type="text"
+              placeholder="Search Tags separated by ,"
+              value={tagSearchTerm.join("," || " , " || ", " || " ,")}
+              onChange={handleTagSearch}
             />
           </div>
 
@@ -98,6 +121,16 @@ const Store: React.FC = () => {
                   <p className="mt-1 text-white">
                     Price: ${game.price} | Developer: {game.developerName}
                   </p>
+                  <div className="flex mt-2">
+                    {game.tags.slice(0, 3).map((tag, index) => (
+                      <div
+                        key={index}
+                        className="px-2 py-1 mr-2 text-xs text-gray-800 bg-gray-300 rounded-md"
+                      >
+                        {tag}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               ))
             ) : (
