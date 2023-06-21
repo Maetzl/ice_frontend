@@ -114,7 +114,7 @@ export default function PublishYourGames() {
 
   const uploadImageToS3games = async (
     gameID: string,
-    selectedFiles: File[] | null
+    selectedFiles: File[]
   ): Promise<string[] | undefined> => {
     const updatedImgLink = [];
 
