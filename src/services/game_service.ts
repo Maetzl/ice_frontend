@@ -58,5 +58,21 @@ const createGame = async (
     error,
   };
 };
+const addBasket = async ( accessToken: string, userData: FormData) => {
+  const config = {
+    url: `${apiServerUrl}/api/games/addbasket`,
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    },
+    data: userData
+  };
 
-export { getGame, createGame, getAllGames };
+  const { data, error } = await callExternalApi({ config });
+  return {
+    data: data || null,
+    error,
+  };
+};
+export { getGame, createGame, getAllGames, addBasket };
