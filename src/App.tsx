@@ -37,7 +37,7 @@ function App() {
           element={<AuthenticationGuard component={Basket} />}
         />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/placeholder" element={<Placeholder />} />
+        <Route path="/basket" element={<Basket />} />
         <Route
           path="/editData"
           element={<AuthenticationGuard component={EditData} />}
