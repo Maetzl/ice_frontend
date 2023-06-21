@@ -14,6 +14,7 @@
     "@types/react": "^18.0.37",
     "@types/react-dom": "^18.0.11",
     "aws-sdk": "^2.1399.0",
+    "aws-sdk-mock": "^5.8.0",
     "axios": "^1.4.0",
     "emailjs-com": "^3.2.0",
     "react": "^18.2.0",
@@ -26,7 +27,7 @@
     "start": "react-scripts start",
     "build": "CI=false && react-scripts build",
     "build:app": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --coverage",
     "test:ci": "react-scripts test --coverage --watchAll=false --detectOpenHandles",
     "eject": "react-scripts eject"
   },

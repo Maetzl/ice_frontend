@@ -43,12 +43,14 @@ export default function PublishYourGames() {
 
   const publishGame = async (e: { preventDefault: () => void }) => {
     if (!user || !selectedImages || !isFormValid) {
+      console.log(user, selectedImages, isFormValid);
       console.error(
         "Error: Please ensure all fields are filled in correctly and try again."
       );
       return;
     }
 
+    console.log(user, user.sub, selectedImages, isFormValid);
     try {
       const accessToken = await getAccessTokenSilently();
       const userID = user.sub?.split("|")[1] || "";
@@ -68,7 +70,7 @@ export default function PublishYourGames() {
       form.append("Tags", tags.toString());
       form.append("ReleaseDate", date);
 
-      console.log(links);
+      console.log("Image Links: ", links);
 
       const { data, error } = await createGame(accessToken, form);
       console.log("Game data successfully uploaded.");
@@ -90,7 +92,7 @@ export default function PublishYourGames() {
   const handleImagesChange = (e: { target: { files: FileList | null } }) => {
     if (e.target.files && e.target.files.length > 0) {
       if (e.target.files.length > 7) {
-        setErrorMessage("Es können maximal 7 Bilder hochgeladen werden.");
+        setErrorMessage("Maximum picture count is 7");
         return;
       }
       setErrorMessage("");
@@ -112,16 +114,17 @@ export default function PublishYourGames() {
 
   const uploadImageToS3games = async (
     gameID: string,
-    selectedFiles: File[] | null
+    selectedFiles: File[]
   ): Promise<string[] | undefined> => {
     const updatedImgLink = [];
 
-    if (!selectedFiles) return;
+    // Unnötige Ifs da davor schon gehandled
+    // if (!selectedFiles) return;
 
-    if (selectedFiles.length > 7) {
-      console.error("Es können maximal 7 Bilder hochgeladen werden.");
-      return;
-    }
+    //if (selectedFiles.length > 7) {
+    //  console.error("Maximum picture count is 7");
+    //  return;
+    //}
 
     for (const file of selectedFiles) {
       const params = {
@@ -159,12 +162,14 @@ export default function PublishYourGames() {
     const inputPrice = parseFloat(e.target.value);
     if (isNaN(inputPrice)) {
       setPriceError("Please enter a valid number for the price.");
+      setGame((prev) => ({ ...prev, price: 0 }));
     } else if (inputPrice < 0) {
       setPriceError("Price can't be lower than 0");
+      setGame((prev) => ({ ...prev, price: inputPrice }));
     } else {
       setPriceError("");
+      setGame((prev) => ({ ...prev, price: inputPrice }));
     }
-    setGame((prev) => ({ ...prev, price: inputPrice }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -229,119 +234,111 @@ export default function PublishYourGames() {
   };
 
   return (
-    <div className="justify-center min-h-screen bg-gray-900">
+    <div className="min-h-screen bg-gray-900">
       <header className="py-4 bg-gray-800">
-        <h1 className="text-2xl font-bold text-center text-white">
-          Publish Your Game
-        </h1>
+        <div className="container px-4 mx-auto">
+          <h1 className="text-2xl font-bold text-white">Publish Your Game</h1>
+        </div>
       </header>
-      <div className="container max-w-md px-4 mx-auto">
-        <main>
-          <form
-            id="publishGameForm"
-            onSubmit={handleSubmit}
-            className="space-y-4"
-          >
-            <div className="mb-4">
-              <label htmlFor="gameName" className="block mb-2 text-white">
-                Game Name
-              </label>
+      <main className="container px-4 py-8 mx-auto">
+        <form id="publishGameForm" onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label htmlFor="gameName" className="block mb-2 text-white">
+              Game Name
+            </label>
+            <input
+              type="text"
+              id="gameName"
+              name="name"
+              className="w-full px-3 py-2 text-white bg-gray-700 border rounded-lg"
+              value={game.name}
+              onChange={handleOnChange}
+            />
+          </div>
+          <div className="mb-4">
+            <label htmlFor="gameDescription" className="block mb-2 text-white">
+              Game Description
+            </label>
+            <textarea
+              id="gameDescription"
+              name="description"
+              className="w-full px-3 py-2 text-white bg-gray-700 border rounded-lg"
+              value={game.description}
+              onChange={handleOnChange}
+            ></textarea>
+          </div>
+          <div>
+            <label htmlFor="price" className="block mb-2 text-white">
+              Price in €
+            </label>
+            <input
+              type="number"
+              id="price"
+              value={game.price}
+              onChange={handlePriceChange}
+              step="0.01"
+              className="text-white pl-1 bg-gray-700 border rounded-lg"
+            />
+            {priceError && <p className="text-red-500">{priceError}</p>}
+          </div>
+          <div className="mb-4 space-y-1">
+            <label htmlFor="tagInput" className="block mb-2 text-white">
+              Tags
+            </label>
+            <div className="space-x-1">
               <input
-                type="text"
-                id="gameName"
-                name="name"
-                className="w-2/3 px-3 py-2 text-white bg-gray-700 border rounded-lg"
-                value={game.name}
-                onChange={handleOnChange}
-              />
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="gameDescription"
-                className="block mb-2 text-white"
+                id="tagInput"
+                onChange={handleTagChange}
+                onKeyDown={handleKeyDownTag}
+                value={tempTag}
+                className="text-white pl-1 bg-gray-700 border rounded-lg"
+              ></input>
+              <button
+                id="addTag"
+                type="button"
+                className="px-2 text-white  bg-gray-700 border rounded-lg"
+                onClick={() => handleAddTag()}
               >
-                Game Description
-              </label>
-              <textarea
-                id="gameDescription"
-                name="description"
-                className="w-2/3 px-3 py-2 text-white bg-gray-700 border rounded-lg"
-                value={game.description}
-                onChange={handleOnChange}
-              ></textarea>
+                Add Tag
+              </button>
             </div>
-            <div>
-              <label htmlFor="price" className="block mb-2 text-white">
-                Price in €
-              </label>
-              <input
-                type="number"
-                id="price"
-                value={game.price}
-                onChange={handlePriceChange}
-                step="0.01"
-                className="pl-1 text-white bg-gray-700 border rounded-lg"
-              />
-              {priceError && <p className="text-red-500">{priceError}</p>}
-            </div>
-            <div className="mb-4 space-y-1">
-              <label htmlFor="service" className="block mb-2 text-white">
-                Tags
-              </label>
-              <div className="space-x-1">
-                <input
-                  onChange={handleTagChange}
-                  onKeyDown={handleKeyDownTag}
-                  value={tempTag}
-                  className="pl-1 text-white bg-gray-700 border rounded-lg"
-                ></input>
+            <div className="space-x-1">
+              {tags.map((singleTag, index) => (
                 <button
-                  id="addTag"
+                  key={index}
                   type="button"
-                  className="px-2 text-white bg-gray-700 border rounded-lg"
-                  onClick={() => handleAddTag()}
+                  onClick={() => handleDeleteTag(index)}
+                  className="px-2 py-1 text-white  bg-gray-700 border rounded-lg"
                 >
-                  Add Tag
+                  <span>{singleTag}</span>
                 </button>
-              </div>
-              <div className="space-x-1">
-                {tags.map((singleTag, index) => (
-                  <button
-                    key={index}
-                    type="button"
-                    onClick={() => handleDeleteTag(index)}
-                    className="px-2 py-1 text-white bg-gray-700 border rounded-lg"
-                  >
-                    <span>{singleTag}</span>
-                  </button>
-                ))}
-              </div>
-              {tagError && <p className="text-red-500">{tagError}</p>}
+              ))}
             </div>
-            <div className="mb-4">
-              <label htmlFor="gameImage" className="block mb-2 text-white">
-                Game Image
-              </label>
-              <input
-                type="file"
-                id="gameImage"
-                className="text-white"
-                accept="image/*"
-                multiple
-                onChange={handleImagesChange}
-              />
-            </div>
+            {tagError && <p className="text-red-500">{tagError}</p>}
+          </div>
+          <div className="mb-4">
+            <label htmlFor="gameImage" className="block mb-2 text-white">
+              Game Image
+            </label>
+            <input
+              type="file"
+              id="gameImage"
+              className="text-white"
+              accept="image/*"
+              multiple
+              onChange={handleImagesChange}
+            />
             {errorMessage && <p className="text-red-500">{errorMessage}</p>}
-            <button
-              type="submit"
-              className="px-4 py-2 text-gray-800 bg-gray-300 rounded-lg disabled:bg-gray-800 disabled:text-gray-100"
-              disabled={!isFormValid}
-            >
-              Publish Game
-            </button>
-          </form>
-        </main>
-      </div>
+          </div>
+          <button
+            type="submit"
+            className="px-4 py-2 text-gray-800 bg-gray-300 rounded-lg disabled:bg-gray-800 disabled:text-gray-100"
+            disabled={!isFormValid}
+          >
+            Publish Game
+          </button>
+        </form>
+      </main>
     </div>
   );
 }
