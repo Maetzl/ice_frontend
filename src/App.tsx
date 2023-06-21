@@ -7,6 +7,7 @@ import Store from "./pages/Store";
 import Basket from "./pages/Basket";
 import Navigation from "./components/Navigation";
 import Footer from "./components/Footer";
+import Gamepage from "./pages/Gamepage";
 import Library from "./pages/Library";
 import PublishYourGames from "./pages/PublishYourGames";
 import Contact from "./pages/Contact";
@@ -20,6 +21,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Index />} />
         <Route path="/store" element={<Store />} />
+        <Route path="/gamepage" element={< Gamepage />}/>
         <Route
           path="/library"
           element={<AuthenticationGuard component={Library} />}
