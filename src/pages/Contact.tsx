@@ -34,8 +34,12 @@ const ContactPage: React.FC = () => {
     <div className="flex flex-col min-h-screen bg-gray-900">
       <header className="px-4 py-4 bg-gray-800">
         <div className="container mx-auto">
-          <h1 className="text-2xl font-bold text-white">Contact Us</h1>
-          <h1 className="text-2xl font-bold text-white">create a ticket</h1>
+          <h1 className="text-2xl font-bold text-center text-white">
+            Contact Us
+          </h1>
+          <h1 className="text-2xl font-bold text-center text-white">
+            create a ticket
+          </h1>
         </div>
       </header>
       <main className="container flex-grow py-8 mx-auto">

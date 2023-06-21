@@ -229,110 +229,119 @@ export default function PublishYourGames() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900">
+    <div className="justify-center min-h-screen bg-gray-900">
       <header className="py-4 bg-gray-800">
-        <div className="container px-4 mx-auto">
-          <h1 className="text-2xl font-bold text-white">Publish Your Game</h1>
-        </div>
+        <h1 className="text-2xl font-bold text-center text-white">
+          Publish Your Game
+        </h1>
       </header>
-      <main className="container px-4 py-8 mx-auto">
-        <form id="publishGameForm" onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label htmlFor="gameName" className="block mb-2 text-white">
-              Game Name
-            </label>
-            <input
-              type="text"
-              id="gameName"
-              name="name"
-              className="w-full px-3 py-2 text-white bg-gray-700 border rounded-lg"
-              value={game.name}
-              onChange={handleOnChange}
-            />
-          </div>
-          <div className="mb-4">
-            <label htmlFor="gameDescription" className="block mb-2 text-white">
-              Game Description
-            </label>
-            <textarea
-              id="gameDescription"
-              name="description"
-              className="w-full px-3 py-2 text-white bg-gray-700 border rounded-lg"
-              value={game.description}
-              onChange={handleOnChange}
-            ></textarea>
-          </div>
-          <div>
-            <label htmlFor="price" className="block mb-2 text-white">
-              Price in €
-            </label>
-            <input
-              type="number"
-              id="price"
-              value={game.price}
-              onChange={handlePriceChange}
-              step="0.01"
-              className="text-white pl-1 bg-gray-700 border rounded-lg"
-            />
-            {priceError && <p className="text-red-500">{priceError}</p>}
-          </div>
-          <div className="mb-4 space-y-1">
-            <label htmlFor="service" className="block mb-2 text-white">
-              Tags
-            </label>
-            <div className="space-x-1">
-              <input
-                onChange={handleTagChange}
-                onKeyDown={handleKeyDownTag}
-                value={tempTag}
-                className="text-white pl-1 bg-gray-700 border rounded-lg"
-              ></input>
-              <button
-                id="addTag"
-                type="button"
-                className="px-2 text-white  bg-gray-700 border rounded-lg"
-                onClick={() => handleAddTag()}
-              >
-                Add Tag
-              </button>
-            </div>
-            <div className="space-x-1">
-              {tags.map((singleTag, index) => (
-                <button
-                  key={index}
-                  type="button"
-                  onClick={() => handleDeleteTag(index)}
-                  className="px-2 py-1 text-white  bg-gray-700 border rounded-lg"
-                >
-                  <span>{singleTag}</span>
-                </button>
-              ))}
-            </div>
-            {tagError && <p className="text-red-500">{tagError}</p>}
-          </div>
-          <div className="mb-4">
-            <label htmlFor="gameImage" className="block mb-2 text-white">
-              Game Image
-            </label>
-            <input
-              type="file"
-              id="gameImage"
-              className="text-white"
-              accept="image/*"
-              multiple
-              onChange={handleImagesChange}
-            />
-          </div>
-          {errorMessage && <p className="text-red-500">{errorMessage}</p>}
-          <button
-            type="submit"
-            className="px-4 py-2 text-gray-800 bg-gray-300 rounded-lg disabled:bg-gray-800 disabled:text-gray-100"
-            disabled={!isFormValid}
+      <div className="container max-w-md px-4 mx-auto">
+        <main>
+          <form
+            id="publishGameForm"
+            onSubmit={handleSubmit}
+            className="space-y-4"
           >
-            Publish Game
-          </button>
-        </form>
-      </main>
+            <div className="mb-4">
+              <label htmlFor="gameName" className="block mb-2 text-white">
+                Game Name
+              </label>
+              <input
+                type="text"
+                id="gameName"
+                name="name"
+                className="w-2/3 px-3 py-2 text-white bg-gray-700 border rounded-lg"
+                value={game.name}
+                onChange={handleOnChange}
+              />
+            </div>
+            <div className="mb-4">
+              <label
+                htmlFor="gameDescription"
+                className="block mb-2 text-white"
+              >
+                Game Description
+              </label>
+              <textarea
+                id="gameDescription"
+                name="description"
+                className="w-2/3 px-3 py-2 text-white bg-gray-700 border rounded-lg"
+                value={game.description}
+                onChange={handleOnChange}
+              ></textarea>
+            </div>
+            <div>
+              <label htmlFor="price" className="block mb-2 text-white">
+                Price in €
+              </label>
+              <input
+                type="number"
+                id="price"
+                value={game.price}
+                onChange={handlePriceChange}
+                step="0.01"
+                className="pl-1 text-white bg-gray-700 border rounded-lg"
+              />
+              {priceError && <p className="text-red-500">{priceError}</p>}
+            </div>
+            <div className="mb-4 space-y-1">
+              <label htmlFor="service" className="block mb-2 text-white">
+                Tags
+              </label>
+              <div className="space-x-1">
+                <input
+                  onChange={handleTagChange}
+                  onKeyDown={handleKeyDownTag}
+                  value={tempTag}
+                  className="pl-1 text-white bg-gray-700 border rounded-lg"
+                ></input>
+                <button
+                  id="addTag"
+                  type="button"
+                  className="px-2 text-white bg-gray-700 border rounded-lg"
+                  onClick={() => handleAddTag()}
+                >
+                  Add Tag
+                </button>
+              </div>
+              <div className="space-x-1">
+                {tags.map((singleTag, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    onClick={() => handleDeleteTag(index)}
+                    className="px-2 py-1 text-white bg-gray-700 border rounded-lg"
+                  >
+                    <span>{singleTag}</span>
+                  </button>
+                ))}
+              </div>
+              {tagError && <p className="text-red-500">{tagError}</p>}
+            </div>
+            <div className="mb-4">
+              <label htmlFor="gameImage" className="block mb-2 text-white">
+                Game Image
+              </label>
+              <input
+                type="file"
+                id="gameImage"
+                className="text-white"
+                accept="image/*"
+                multiple
+                onChange={handleImagesChange}
+              />
+            </div>
+            {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+            <button
+              type="submit"
+              className="px-4 py-2 text-gray-800 bg-gray-300 rounded-lg disabled:bg-gray-800 disabled:text-gray-100"
+              disabled={!isFormValid}
+            >
+              Publish Game
+            </button>
+          </form>
+        </main>
+      </div>
     </div>
   );
 }
