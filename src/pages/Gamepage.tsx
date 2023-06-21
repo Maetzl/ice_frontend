@@ -6,6 +6,7 @@ import { getGame } from "../services/game_service";
 export default function Gamepage() {
 
     const { user, getAccessTokenSilently } = useAuth0();
+    const [location, setLocation] = useState(useLocation().search)
     const [game, setGame] = useState({
         name: "",
         description: "",
@@ -15,12 +16,12 @@ export default function Gamepage() {
         releaseDate: "",
         tags: [""],
         gameID: "",
-        images:[""]
-      });
+        images: [""]
+    });
 
     useEffect(() => {
         initState();
-    }, [getAccessTokenSilently]);
+    }, [location, getAccessTokenSilently]);
 
     const initState = async () => {
         const accessToken = await getAccessTokenSilently();
@@ -30,28 +31,41 @@ export default function Gamepage() {
         }
         var form = new FormData();
         form.append("UserID", userID);
-        const { data, error } = await getGame(accessToken, new URLSearchParams(useLocation().search).get('id'));
+        const { data, error } = await getGame(accessToken, new URLSearchParams(location).get('id'));
         console.log("data", data);
-        setGame(data)
+        setGame(data[0])
+        console.log("game", game);
     };
 
-    return <div>
-        <div className="flex justify-center items-start bg-[#070231] min-h-screen">
-            <div className="bg-[#050125] min-h-screen w-2/3">
-                <div className="container bg-[#283046] text-white p-20 box-border mx-auto flex flex-col items-start">
-                    {/* <div className=" w-60 ">
-                        {library.map((game, index) => (<button key={index}
-                            type="button" onClick={() => handleSetGame(game)}
-                            className="block w-full cursor-pointer rounded-lg px-4 py-1 mt-1 text-left transition duration-500 bg-slate-500 hover:bg-neutral-100 hover:text-neutral-500 focus:bg-neutral-100 focus:text-neutral-500 focus:ring-0 dark:hover:bg-neutral-600 dark:hover:text-neutral-200 dark:focus:bg-neutral-600 dark:focus:text-neutral-200">
-                            {game.name}
-                        </button>
-                        ))}
-                    </div> */}
-                    <div>
-                        {game.name}
+    if (game) {
+        console.log("Gamename", game.name)
+        return (<div>
+            <div className="flex justify-center items-start bg-[#070231] min-h-screen">
+                <div className="bg-[#050125] min-h-screen w-2/3">
+                    <h1 className="pt-20 text-4xl text-center text-white bg-[#283046]">{game.name}</h1>
+                    <div className="container bg-[#283046] text-white p-20 box-border mx-auto flex flex-col items-start">
+                        <div className=" w-full content-evenly">
+                            <img
+                                src={game.images[0]}
+                                alt="Profilbild"
+                            />
+                            <img
+                                src={game.images[1]}
+                                alt="Profilbild"
+                            />
+                        </div>
+                        <div className="mt-16">
+                            {game.description}
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>;
+        </div>);
+    } else
+        return (
+            <div>
+                Es ist ein Fehler aufgetreten. bitte Lade die Seite neu oder nehme
+                Kontakt mit den Entwicklern auf.
+            </div>
+        );
 }

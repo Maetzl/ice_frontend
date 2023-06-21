@@ -6,7 +6,7 @@ const getGame = async (accessToken: string, gameID: any) => {
     var form = new FormData();
     form.append("GameID", gameID);
   const config = {
-    url: `${apiServerUrl}/api/games`,
+    url: `${apiServerUrl}/api/games/game`,
     method: "POST",
     headers: {
       "Content-Type": "application/json",
