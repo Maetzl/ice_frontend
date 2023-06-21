@@ -75,11 +75,11 @@ const Store: React.FC = () => {
                 type="range"
                 min="1"
                 max="100"
-                step="0.1"
+                step="1"
                 value={maxPrice || ""}
                 onChange={handleMaxPriceChange}
               />
-              <span className="text-white">{`${maxPrice || 50}€`}</span>
+              <span className="text-white">{`${maxPrice ?? "50"}€`}</span>
             </div>
           </div>
 
@@ -90,7 +90,7 @@ const Store: React.FC = () => {
                   <Link to={`/gamepage?id={${game.gameID}`}>
                     <img
                       className="object-cover w-full h-auto"
-                      src={`https://icegaming.s3.eu-central-1.amazonaws.com/${game.images[0]}`}
+                      src={`${game.images[0]}`}
                       alt={game.name}
                     />
                   </Link>
