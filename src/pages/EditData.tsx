@@ -106,7 +106,9 @@ export default function EditData() {
     <div className="min-h-screen bg-gray-900">
       <header className="py-4 bg-gray-800">
         <div className="container px-4 mx-auto">
-          <h1 className="text-2xl font-bold text-white">Daten bearbeiten</h1>
+          <h1 className="text-2xl font-bold text-center text-white">
+            Daten bearbeiten
+          </h1>
         </div>
       </header>
       <main className="container px-4 py-8 mx-auto">

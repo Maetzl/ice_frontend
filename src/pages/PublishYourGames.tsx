@@ -234,11 +234,11 @@ export default function PublishYourGames() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900">
+    <div className="justify-center min-h-screen bg-gray-900">
       <header className="py-4 bg-gray-800">
-        <div className="container px-4 mx-auto">
-          <h1 className="text-2xl font-bold text-white">Publish Your Game</h1>
-        </div>
+        <h1 className="text-2xl font-bold text-center text-white">
+          Publish Your Game
+        </h1>
       </header>
       <main className="container px-4 py-8 mx-auto">
         <form id="publishGameForm" onSubmit={handleSubmit}>
@@ -299,20 +299,63 @@ export default function PublishYourGames() {
                 className="px-2 text-white  bg-gray-700 border rounded-lg"
                 onClick={() => handleAddTag()}
               >
-                Add Tag
-              </button>
+                Game Description
+              </label>
+              <textarea
+                id="gameDescription"
+                name="description"
+                className="w-2/3 px-3 py-2 text-white bg-gray-700 border rounded-lg"
+                value={game.description}
+                onChange={handleOnChange}
+              ></textarea>
             </div>
-            <div className="space-x-1">
-              {tags.map((singleTag, index) => (
+            <div>
+              <label htmlFor="price" className="block mb-2 text-white">
+                Price in €
+              </label>
+              <input
+                type="number"
+                id="price"
+                value={game.price}
+                onChange={handlePriceChange}
+                step="0.01"
+                className="pl-1 text-white bg-gray-700 border rounded-lg"
+              />
+              {priceError && <p className="text-red-500">{priceError}</p>}
+            </div>
+            <div className="mb-4 space-y-1">
+              <label htmlFor="service" className="block mb-2 text-white">
+                Tags
+              </label>
+              <div className="space-x-1">
+                <input
+                  onChange={handleTagChange}
+                  onKeyDown={handleKeyDownTag}
+                  value={tempTag}
+                  className="pl-1 text-white bg-gray-700 border rounded-lg"
+                ></input>
                 <button
-                  key={index}
+                  id="addTag"
                   type="button"
-                  onClick={() => handleDeleteTag(index)}
-                  className="px-2 py-1 text-white  bg-gray-700 border rounded-lg"
+                  className="px-2 text-white bg-gray-700 border rounded-lg"
+                  onClick={() => handleAddTag()}
                 >
-                  <span>{singleTag}</span>
+                  Add Tag
                 </button>
-              ))}
+              </div>
+              <div className="space-x-1">
+                {tags.map((singleTag, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    onClick={() => handleDeleteTag(index)}
+                    className="px-2 py-1 text-white bg-gray-700 border rounded-lg"
+                  >
+                    <span>{singleTag}</span>
+                  </button>
+                ))}
+              </div>
+              {tagError && <p className="text-red-500">{tagError}</p>}
             </div>
             {tagError && <p className="text-red-500">{tagError}</p>}
           </div>

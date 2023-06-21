@@ -53,8 +53,8 @@ const Store: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-center items-start bg-[#070231] min-h-screen">
-      <div className="bg-[#050125] min-h-screen">
+    <div className="flex items-start justify-center min-h-screen bg-gray-900">
+      <div className="min-h-screen bg-gray-900">
         <div className="container bg-[#283046] text-white p-20 box-border mx-auto flex flex-col items-center">
           <h1 className="mt-20 text-4xl">Store</h1>
 
@@ -75,11 +75,11 @@ const Store: React.FC = () => {
                 type="range"
                 min="1"
                 max="100"
-                step="0.1"
+                step="1"
                 value={maxPrice || ""}
                 onChange={handleMaxPriceChange}
               />
-              <span className="text-white">{`${maxPrice || 50}€`}</span>
+              <span className="text-white">{`${maxPrice ?? "50"}€`}</span>
             </div>
           </div>
 
@@ -87,10 +87,10 @@ const Store: React.FC = () => {
             {filteredGames.length > 0 ? (
               filteredGames.map((game) => (
                 <div className="flex flex-col items-center game" key={game._id}>
-                  <Link to="/">
+                  <Link to={`/gamepage?id={${game.gameID}`}>
                     <img
                       className="object-cover w-full h-auto"
-                      src={`https://icegaming.s3.eu-central-1.amazonaws.com/${game.images[0]}`}
+                      src={`${game.images[0]}`}
                       alt={game.name}
                     />
                   </Link>
