@@ -44,14 +44,14 @@ const Basket: React.FC = () => {
                 <div className="container bg-[#283046] text-white p-20 box-border mx-auto flex flex-col items-start">
 
                         <table className="table-auto border-spacing-5 w-3/4">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Description</th>
-                                    <th>Price</th>
+                            <thead className=" border-b-2">
+                                <tr >
+                                    <th className="text-left">Name</th>
+                                    <th className="text-left">Description</th>
+                                    <th className="text-left">Price</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody className=" divide-y-2">
                                 {myGames.map((game) => (
                                     <tr>
                                         <td>{game.name}</td>
