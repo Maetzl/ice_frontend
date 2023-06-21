@@ -53,7 +53,7 @@ const Store: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-center items-start bg-[#070231] min-h-screen">
+    <div className="flex justify-center items-start bg-[#050125] min-h-screen">
       <div className="bg-[#050125] min-h-screen">
         <div className="container bg-[#283046] text-white p-20 box-border mx-auto flex flex-col items-center">
           <h1 className="mt-20 text-4xl">Store</h1>
