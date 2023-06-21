@@ -43,12 +43,14 @@ export default function PublishYourGames() {
 
   const publishGame = async (e: { preventDefault: () => void }) => {
     if (!user || !selectedImages || !isFormValid) {
+      console.log(user, selectedImages, isFormValid);
       console.error(
         "Error: Please ensure all fields are filled in correctly and try again."
       );
       return;
     }
 
+    console.log(user, user.sub, selectedImages, isFormValid);
     try {
       const accessToken = await getAccessTokenSilently();
       const userID = user.sub?.split("|")[1] || "";
@@ -68,7 +70,7 @@ export default function PublishYourGames() {
       form.append("Tags", tags.toString());
       form.append("ReleaseDate", date);
 
-      console.log(links);
+      console.log("Image Links: ", links);
 
       const { data, error } = await createGame(accessToken, form);
       console.log("Game data successfully uploaded.");
@@ -90,7 +92,7 @@ export default function PublishYourGames() {
   const handleImagesChange = (e: { target: { files: FileList | null } }) => {
     if (e.target.files && e.target.files.length > 0) {
       if (e.target.files.length > 7) {
-        setErrorMessage("Es können maximal 7 Bilder hochgeladen werden.");
+        setErrorMessage("Maximum picture count is 7");
         return;
       }
       setErrorMessage("");
@@ -116,12 +118,13 @@ export default function PublishYourGames() {
   ): Promise<string[] | undefined> => {
     const updatedImgLink = [];
 
-    if (!selectedFiles) return;
+    // Unnötige Ifs da davor schon gehandled
+    // if (!selectedFiles) return;
 
-    if (selectedFiles.length > 7) {
-      console.error("Es können maximal 7 Bilder hochgeladen werden.");
-      return;
-    }
+    //if (selectedFiles.length > 7) {
+    //  console.error("Maximum picture count is 7");
+    //  return;
+    //}
 
     for (const file of selectedFiles) {
       const params = {
@@ -159,12 +162,14 @@ export default function PublishYourGames() {
     const inputPrice = parseFloat(e.target.value);
     if (isNaN(inputPrice)) {
       setPriceError("Please enter a valid number for the price.");
+      setGame((prev) => ({ ...prev, price: 0 }));
     } else if (inputPrice < 0) {
       setPriceError("Price can't be lower than 0");
+      setGame((prev) => ({ ...prev, price: inputPrice }));
     } else {
       setPriceError("");
+      setGame((prev) => ({ ...prev, price: inputPrice }));
     }
-    setGame((prev) => ({ ...prev, price: inputPrice }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -277,11 +282,12 @@ export default function PublishYourGames() {
             {priceError && <p className="text-red-500">{priceError}</p>}
           </div>
           <div className="mb-4 space-y-1">
-            <label htmlFor="service" className="block mb-2 text-white">
+            <label htmlFor="tagInput" className="block mb-2 text-white">
               Tags
             </label>
             <div className="space-x-1">
               <input
+                id="tagInput"
                 onChange={handleTagChange}
                 onKeyDown={handleKeyDownTag}
                 value={tempTag}
@@ -322,8 +328,8 @@ export default function PublishYourGames() {
               multiple
               onChange={handleImagesChange}
             />
+            {errorMessage && <p className="text-red-500">{errorMessage}</p>}
           </div>
-          {errorMessage && <p className="text-red-500">{errorMessage}</p>}
           <button
             type="submit"
             className="px-4 py-2 text-gray-800 bg-gray-300 rounded-lg disabled:bg-gray-800 disabled:text-gray-100"
