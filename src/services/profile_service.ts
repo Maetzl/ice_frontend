@@ -34,14 +34,15 @@ const updateProfile = async (accessToken: string, userData: FormData) => {
     error,
   };
 };
-const getBasket = async (accessToken: string) => {
+const getBasket = async (accessToken: string, userData : FormData) => {
   const config = {
     url: `${apiServerUrl}/api/profile/basket/`,
-    method: "GET",
+    method: "POST",
     headers: {
       "content-type": "application/json",
       Authorization: `Bearer ${accessToken}`
     },
+    data: userData
   };
   const { data, error } = await callExternalApi({ config });
   return {
@@ -49,4 +50,36 @@ const getBasket = async (accessToken: string) => {
     error,
   }
 }
-export { getProfile, updateProfile, getBasket }
+const removeBasket = async (accessToken: string, userData : FormData) => {
+  const config = {
+    url: `${apiServerUrl}/api/profile/removebasket/`,
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      Authorization: `Bearer ${accessToken}`
+    },
+    data: userData
+  };
+  const { data, error } = await callExternalApi({ config });
+  return {
+    data: data || null,
+    error,
+  }
+}
+const buyBasket = async (accessToken: string, userData : FormData) => {
+  const config = {
+    url: `${apiServerUrl}/api/profile/buybasket/`,
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      Authorization: `Bearer ${accessToken}`
+    },
+    data: userData
+  };
+  const { data, error } = await callExternalApi({ config });
+  return {
+    data: data || null,
+    error,
+  }
+}
+export { getProfile, updateProfile, getBasket, removeBasket, buyBasket }
