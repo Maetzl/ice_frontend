@@ -176,11 +176,11 @@ export default function Gamepage() {
                 </Carousel>
               </div>
             </section>
-            <div className="flex flex-row items-center justify-center w-full p-4 mt-1">
-              <div className="flex flex-row items-center justify-center w-full p-4 mt-1">
+            <div className="flex flex-row items-center justify-center w-full mt-1">
+              <div className="flex flex-row items-center justify-center w-full mt-1">
                 {game.tags.map((tag, index) => (
                   <span
-                    className="inline-block whitespace-nowrap rounded-[0.27rem] bg-slate-400 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] font-bold leading-none text-primary-700"
+                    className="inline-block whitespace-nowrap rounded-[0.27rem] m-1 bg-slate-400 px-[0.65em] pb-[0.25em] p-10 pt-[0.35em] text-center align-baseline text-[0.75em] font-bold leading-none text-primary-700"
                     key={index}
                   >
                     {tag}
@@ -211,7 +211,7 @@ export default function Gamepage() {
               <br />
             </div>
           </div>
-          <div className="flex flex-col items-center justify-start w-full p-4 mt-1 text-white">
+          <div className="flex flex-col items-center justify-center w-full p-4 mt-1 text-white">
             <b>Comments:</b>
             {game.comments.map((comment, index) => (
               <div className="w-full" key={index}>
@@ -225,7 +225,7 @@ export default function Gamepage() {
             ))}
           </div>
           <div>
-            <form id="addCommentForm" className="w-full">
+            <form id="addCommentForm" className="flex justify-center w-full">
               <textarea
                 onChange={(e) => setComment(e.target.value)}
                 value={comment}
