@@ -1,11 +1,9 @@
 import React, { FormEvent, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
-
 import { getGame, addBasket, addComment, removeComment, replaceComment } from "../services/game_service";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
-import { promises } from "dns";
 
 export default function Gamepage() {
 
@@ -26,28 +24,30 @@ export default function Gamepage() {
     });
     var activeUserID: string;
     var inBasket: boolean = false;
+
     useEffect(() => {
         initState();
     }, [location, getAccessTokenSilently, inBasket, comment]);
-const responsive = {
-    superLargeDesktop: {
-      // the naming can be any, depends on you.
-      breakpoint: { max: 4000, min: 3000 },
-      items: 5,
-    },
-    desktop: {
-      breakpoint: { max: 3000, min: 1024 },
-      items: 3,
-    },
-    tablet: {
-      breakpoint: { max: 1024, min: 464 },
-      items: 2,
-    },
-    mobile: {
-      breakpoint: { max: 464, min: 0 },
-      items: 1,
-    },
-  };
+
+    const responsive = {
+        superLargeDesktop: {
+            // the naming can be any, depends on you.
+            breakpoint: { max: 4000, min: 3000 },
+            items: 5,
+        },
+        desktop: {
+            breakpoint: { max: 3000, min: 1024 },
+            items: 3,
+        },
+        tablet: {
+            breakpoint: { max: 1024, min: 464 },
+            items: 2,
+        },
+        mobile: {
+            breakpoint: { max: 464, min: 0 },
+            items: 1,
+        },
+    };
     const initState = async () => {
         const accessToken = await getAccessTokenSilently();
         var userID = "";
@@ -127,45 +127,46 @@ const responsive = {
     }
     if (game) {
 
-        return (<div>
+        return (
             <div className="flex justify-center items-start bg-[#070231] min-h-screen">
                 <div className="bg-[#050125] min-h-screen w-2/3">
                     <h1 className="pt-20 text-4xl text-center text-white bg-[#283046]">{game.name}</h1>
-                                <div className="container bg-[#283046] text-white p-10 box-border mx-auto flex flex-col items-start">
-              <section className="w-full py-16 bg-transparent">
-                <div className="container w-full text-center">
-                  <Carousel
-                    className="mb-10"
-                    swipeable={false}
-                    draggable={false}
-                    showDots={true}
-                    responsive={responsive}
-                    ssr={false} // means to render carousel on server-side.
-                    infinite={true}
-                    autoPlay={false}
-                    autoPlaySpeed={1000}
-                    keyBoardControl={true}
-                    customTransition="all .5"
-                    transitionDuration={500}
-                    containerClass="carousel-container"
-                    removeArrowOnDeviceType={["tablet", "mobile"]}
-                    dotListClass="custom-dot-list-style"
-                    itemClass="carousel-item-padding-40-px"
-                  >
-                    {game.images.map((image, index) => (
-                      <div className="flex justify-center px-2">
-                        <img
-                          key={index}
-                          className="object-contain h-52"
-                          src={image}
-                          alt="bild"
-                        />
-                      </div>
-                    ))}
-                  </Carousel>
-                </div>
-              </section>
-              <div className="flex flex-row items-center justify-center w-full p-4 mt-1 ">
+                    <div className="container bg-[#283046] text-white p-10 box-border mx-auto flex flex-col items-start">
+                        <section className="w-full py-16 bg-transparent">
+                            <div className="container w-full text-center">
+                                <Carousel
+                                    className="mb-10"
+                                    swipeable={false}
+                                    draggable={false}
+                                    showDots={true}
+                                    responsive={responsive}
+                                    ssr={false} // means to render carousel on server-side.
+                                    infinite={true}
+                                    autoPlay={false}
+                                    autoPlaySpeed={1000}
+                                    keyBoardControl={true}
+                                    customTransition="all .5"
+                                    transitionDuration={500}
+                                    containerClass="carousel-container"
+                                    removeArrowOnDeviceType={["tablet", "mobile"]}
+                                    dotListClass="custom-dot-list-style"
+                                    itemClass="carousel-item-padding-40-px"
+                                >
+                                    {game.images.map((image, index) => (
+                                        <div className="flex justify-center px-2">
+                                            <img
+                                                key={index}
+                                                className="object-contain h-52"
+                                                src={image}
+                                                alt="bild"
+                                            />
+                                        </div>
+                                    ))}
+                                </Carousel>
+                            </div>
+                        </section>
+                    </div>
+                    <div className="flex flex-row items-center justify-center w-full p-4 mt-1 ">
                         <div className=" w-full mt-1 p-4 flex flex-row items-center justify-center">
                             {game.tags.map((tag) => (
                                 <span
@@ -228,3 +229,10 @@ const responsive = {
                             </form>
                         </div>
                     </div>
+                </div>
+            </div>
+        );
+    }else{
+        return <div>fehler!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</div>
+    }
+}

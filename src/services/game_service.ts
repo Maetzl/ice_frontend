@@ -173,13 +173,4 @@ const removeComment = async ( accessToken: string, userData: FormData) => {
     error,
   };
 };
-export { getGame, createGame, getAllGames, addBasket, addComment, removeComment, replaceComment };
-export {
-  getGame,
-  createGame,
-  getAllGames,
-  addBasket,
-  getDevelopedGames,
-  removeGame,
-  editGame,
-};
+export { getGame, createGame, getAllGames, addBasket, addComment, removeComment, replaceComment, editGame,removeGame, getDevelopedGames };
