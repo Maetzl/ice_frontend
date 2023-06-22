@@ -92,4 +92,38 @@ const addComment = async ( accessToken: string, userData: FormData) => {
     error,
   };
 };
-export { getGame, createGame, getAllGames, addBasket, addComment };
+const replaceComment = async ( accessToken: string, userData: FormData) => {
+  const config = {
+    url: `${apiServerUrl}/api/games/replacecomment`,
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    },
+    data: userData
+  };
+
+  const { data, error } = await callExternalApi({ config });
+  return {
+    data: data || null,
+    error,
+  };
+};
+const removeComment = async ( accessToken: string, userData: FormData) => {
+  const config = {
+    url: `${apiServerUrl}/api/games/removecomment`,
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    },
+    data: userData
+  };
+
+  const { data, error } = await callExternalApi({ config });
+  return {
+    data: data || null,
+    error,
+  };
+};
+export { getGame, createGame, getAllGames, addBasket, addComment, removeComment, replaceComment };
