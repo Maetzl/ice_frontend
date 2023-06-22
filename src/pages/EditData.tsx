@@ -10,7 +10,6 @@ export default function EditData() {
   const [name, setName] = useState("");
   const [country, setCountry] = useState("");
   const [description, setDescription] = useState("");
-  const [favoriteGame, setFavoriteGame] = useState("");
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const navigate = useNavigate();
   var userID = "";
@@ -165,19 +164,6 @@ export default function EditData() {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             ></textarea>
-          </div>
-          <div className="mb-4">
-            <label htmlFor="favoriteGame" className="block mb-2 text-white">
-              Lieblingsspiel
-            </label>
-            <input
-              type="text"
-              id="favoriteGame"
-              className="w-full px-3 py-2 text-white bg-gray-700 border rounded-lg"
-              placeholder="Dein Lieblingsspiel"
-              value={favoriteGame}
-              onChange={(e) => setFavoriteGame(e.target.value)}
-            />
           </div>
           <div className="mb-4">
             <label htmlFor="image" className="block mb-2 text-white">
