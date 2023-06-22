@@ -2,16 +2,17 @@ import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { getLibrary } from "../services/library_service";
 
+interface Game {
+  images: string[];
+  name: string;
+  description: string;
+  price: number;
+}
+
 export default function Library() {
   const { user, getAccessTokenSilently } = useAuth0();
-  const [library, setLibrary] = useState([
-    { name: "", description: "", price: 0 },
-  ]);
-  const [selectedGame, setGame] = useState({
-    name: "",
-    description: "",
-    price: 0,
-  });
+  const [library, setLibrary] = useState<Game[]>([]); // Explicit type definition
+  const [selectedGame, setGame] = useState<Game | null>(null); // Explicit type definition
 
   useEffect(() => {
     const initState = async () => {
@@ -31,32 +32,41 @@ export default function Library() {
     initState();
   }, [getAccessTokenSilently]);
 
-  function handleSetGame(game: {
-    name: string;
-    description: string;
-    price: number;
-  }): void {
+  function handleSetGame(game: Game) {
     setGame(game);
   }
 
   return (
     <div>
-      <div className="flex justify-center items-start bg-[#070231] min-h-screen">
-        <div className="bg-[#050125] min-h-screen w-2/3">
+      <div className="flex justify-center items-start bg-gradient-to-b from-blue-600 to-[#283046] min-h-screen">
+        <div className="w-2/3 min-h-screen bg-transparent">
           <div className="container bg-[#283046] text-white p-20 box-border mx-auto flex flex-col items-start">
-            <div className=" w-60 ">
-              {library.map((game, index) => (
-                <button
-                  key={index}
-                  type="button"
-                  onClick={() => handleSetGame(game)}
-                  className="block w-full cursor-pointer rounded-lg px-4 py-1 mt-1 text-left transition duration-500 bg-slate-500 hover:bg-neutral-100 hover:text-neutral-500 focus:bg-neutral-100 focus:text-neutral-500 focus:ring-0 dark:hover:bg-neutral-600 dark:hover:text-neutral-200 dark:focus:bg-neutral-600 dark:focus:text-neutral-200"
-                >
-                  {game.name}
-                </button>
-              ))}
+            <div className="flex ">
+              {library.length > 0 ? (
+                library.map((game, index) => (
+                  <div className="relative">
+                    <img
+                      src={game.images[0]}
+                      onClick={() => handleSetGame(game)}
+                      className="p-2 w-96"
+                    ></img>
+                    <div className="text-center">{game.name}</div>
+                  </div>
+                ))
+              ) : (
+                <p>No games available in the library.</p>
+              )}
             </div>
-            <div>{selectedGame.name}</div>
+            {selectedGame && (
+              <div>
+                <h1 className="p-4 text-lg font-semibold text-center">
+                  {selectedGame.name}
+                </h1>
+                <p>{selectedGame.description}</p>
+                <p>Price: {selectedGame.price}</p>
+                {/* Render additional game details */}
+              </div>
+            )}
           </div>
         </div>
       </div>
