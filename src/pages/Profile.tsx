@@ -108,7 +108,7 @@ export default function Profile() {
     console.log("imgURL:", imageSrc);
 
     return (
-      <div className="min-h-screen bg-gray-900">
+      <div className="min-h-screen bg-gradient-to-b from-blue-600 to-[#283046]">
         <header className="py-4 bg-gray-800">
           <div className="container px-4 mx-auto">
             <h1 className="text-2xl font-bold text-center text-white">
@@ -116,7 +116,7 @@ export default function Profile() {
             </h1>
           </div>
         </header>
-        <main className="container px-4 py-8 mx-auto">
+        <main className="container flex justify-center px-10 py-8 mx-auto">
           <div className="grid grid-cols-3 gap-8">
             <div className="col-span-2">
               <div className="p-8 bg-gray-800 rounded-lg shadow-lg">
@@ -165,7 +165,10 @@ export default function Profile() {
 
                   <div className="flex flex-wrap mt-4">
                     {devGames.map((game, index) => (
-                      <div key={index} className=" m-2 bg-gray-700 rounded-lg">
+                      <div
+                        key={index}
+                        className="m-2 space-x-2 space-y-2 bg-gray-700 rounded-lg 2 "
+                      >
                         <div className="flex flex-col justify-between h-full p-2">
                           <div className="text-white">{game.name}</div>
                           <div className="text-xs text-gray-400">
@@ -183,7 +186,7 @@ export default function Profile() {
                               handleDeleteGame(game.gameID);
                             }
                           }}
-                          className="px-4 py-2 text-gray-100 bg-red-900 rounded-lg disabled:bg-gray-800 disabled:text-gray-100"
+                          className="px-5 py-2 text-gray-100 bg-red-900 rounded-lg disabled:bg-gray-800 disabled:text-gray-100"
                         >
                           Delete Game
                         </button>
