@@ -248,6 +248,33 @@ describe("PublishYourGames component", () => {
     expect(errorMessage).toBeInTheDocument();
   });
 
+  it("Should print an Error when uploading a non image file", async () => {
+    render(<PublishYourGames />);
+
+    const imageInput = screen.getByLabelText("Game Image") as HTMLInputElement;
+
+    const fileList = mockFileList([
+      new File(["image data"], `test0.jpg`, {
+        type: "image/jpeg",
+      }),
+      new File(["image data"], `test1.jpg`, {
+        type: "executable/emil",
+      }),
+    ]);
+
+    await act(async () => {
+      await fireEvent.change(imageInput, {
+        target: {
+          files: fileList,
+        },
+      });
+    });
+
+    const errorMessage = screen.queryByText("You can upload only image files");
+
+    expect(errorMessage).toBeInTheDocument();
+  });
+
   it("Should print an Error when uploading more than 1 .exe File", async () => {
     render(<PublishYourGames />);
 

@@ -102,6 +102,14 @@ export default function PublishYourGames() {
       }
       setErrorMessageImg("");
 
+      for (let i = 0; i < e.target.files.length; i++) {
+        if (!e.target.files[i].type.includes("image")) {
+          setErrorMessageImg("You can upload only image files");
+          setSelectedImage(null);
+          return;
+        }
+      }
+
       let fileNumber = 0;
       const files =
         e.target.files instanceof FileList
