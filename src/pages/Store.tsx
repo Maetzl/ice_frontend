@@ -118,11 +118,13 @@ const Store: React.FC = () => {
               filteredGames.map((game) => (
                 <div className="flex flex-col items-center game" key={game._id}>
                   <Link to={`/gamepage?id=${game.gameID}`}>
-                    <img
-                      className="object-cover w-full h-auto"
-                      src={`${game.images[0]}`}
-                      alt={game.name}
-                    />
+                    <div className="w-full h-48">
+                      <img
+                        className="object-cover w-full h-full"
+                        src={`${game.images[0]}`}
+                        alt={game.name}
+                      />
+                    </div>
                   </Link>
                   <p className="mt-2 text-white">{game.name}</p>
                   <p className="mt-1 text-white">
