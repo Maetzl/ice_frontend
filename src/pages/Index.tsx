@@ -6,7 +6,7 @@ export default function Index() {
 
   return (
     <div>
-      <section className="py-16 bg-gradient-to-b from-blue-200 to-blue-400">
+      <section className="py-16 bg-gradient-to-b from-[#283046] to-blue-600">
         <div className="container mx-auto text-center">
           <h1 className="mb-4 text-4xl font-bold text-white">
             Welcome to the Gaming Marketplace
@@ -23,7 +23,7 @@ export default function Index() {
         </div>
       </section>
 
-      <section className="py-16 bg-gradient-to-b from-blue-400 to-blue-200">
+      <section className="py-16 bg-gradient-to-b from-blue-600 to-[#283046]">
         <div className="container flex justify-center mx-auto mb-8">
           <div className="w-1/3 mx-auto">
             {" "}
@@ -36,7 +36,7 @@ export default function Index() {
             <h2 className="mb-4 text-2xl font-bold">
               Find Your Favorite Games
             </h2>
-            <p className="text-lg text-gray-700">
+            <p className="text-lg text-white">
               Explore a vast collection of games in our store and add them to
               your library.
             </p>
@@ -50,7 +50,7 @@ export default function Index() {
               className="object-cover h-64 mb-4 rounded-lg"
             />
             <h2 className="mb-4 text-2xl font-bold">Publish Your Games</h2>
-            <p className="text-lg text-gray-700">
+            <p className="text-lg text-white">
               Share your own games with the gaming community and reach a wide
               audience.
             </p>
@@ -64,7 +64,7 @@ export default function Index() {
               className="object-cover h-64 mb-4 rounded-lg"
             />
             <h2 className="mb-4 text-2xl font-bold">Connect with Gamers</h2>
-            <p className="text-lg text-gray-700">
+            <p className="text-lg text-white">
               Interact with other gamers, join communities, and discover new
               gaming experiences.
             </p>

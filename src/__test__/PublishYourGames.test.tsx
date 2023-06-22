@@ -96,6 +96,9 @@ describe("PublishYourGames component", () => {
     ) as HTMLTextAreaElement;
     const priceInput = screen.getByLabelText("Price in €") as HTMLInputElement;
     const imageInput = screen.getByLabelText("Game Image") as HTMLInputElement;
+    const exeInput = screen.getByLabelText(
+      "Game Executable"
+    ) as HTMLInputElement;
     const submitButton = screen.getByRole("button", { name: "Publish Game" });
 
     await act(async () => {
@@ -107,6 +110,11 @@ describe("PublishYourGames component", () => {
       await fireEvent.change(imageInput, {
         target: {
           files: [new File(["image data"], "test.jpg", { type: "image/jpeg" })],
+        },
+      });
+      await fireEvent.change(exeInput, {
+        target: {
+          files: [new File(["image data"], "game.exe", { type: ".exe" })],
         },
       });
     });
@@ -240,6 +248,87 @@ describe("PublishYourGames component", () => {
     expect(errorMessage).toBeInTheDocument();
   });
 
+  it("Should print an Error when uploading more than 1 .exe File", async () => {
+    render(<PublishYourGames />);
+
+    const exeInput = screen.getByLabelText(
+      "Game Executable"
+    ) as HTMLInputElement;
+
+    const fileList = mockFileList([
+      new File(["exe data"], `game1.exe`, {
+        type: ".exe",
+      }),
+      new File(["exe data"], `test2.exe`, {
+        type: ".exe",
+      }),
+    ]);
+
+    await act(async () => {
+      await fireEvent.change(exeInput, {
+        target: {
+          files: fileList,
+        },
+      });
+    });
+
+    const errorMessage = screen.queryByText("You can only upload one .exe");
+
+    expect(errorMessage).toBeInTheDocument();
+  });
+
+  it("Should print an Error when uploading any other file than an .exe", async () => {
+    render(<PublishYourGames />);
+
+    const exeInput = screen.getByLabelText(
+      "Game Executable"
+    ) as HTMLInputElement;
+
+    const fileList = mockFileList([
+      new File(["image data"], `game1.jpg`, {
+        type: ".jpg",
+      }),
+    ]);
+
+    await act(async () => {
+      await fireEvent.change(exeInput, {
+        target: {
+          files: fileList,
+        },
+      });
+    });
+
+    const errorMessage = screen.queryByText("You can only upload .exe");
+
+    expect(errorMessage).toBeInTheDocument();
+  });
+
+  it("Should accept an file that ends with .*.exe", async () => {
+    render(<PublishYourGames />);
+
+    const exeInput = screen.getByLabelText(
+      "Game Executable"
+    ) as HTMLInputElement;
+
+    const fileList = mockFileList([
+      new File(["image data"], `game1.jpg.exe`, {
+        type: ".exe",
+      }),
+    ]);
+
+    await act(async () => {
+      await fireEvent.change(exeInput, {
+        target: {
+          files: fileList,
+        },
+      });
+    });
+
+    const errorMessage = screen.queryByText("You can only upload .exe");
+
+    expect(errorMessage).toBeNull();
+  });
+
   it("Should print Errors when price is wrong", async () => {
     render(<PublishYourGames />);
 
@@ -292,6 +381,9 @@ describe("PublishYourGames component", () => {
     ) as HTMLTextAreaElement;
     const priceInput = screen.getByLabelText("Price in €") as HTMLInputElement;
     const imageInput = screen.getByLabelText("Game Image") as HTMLInputElement;
+    const exeInput = screen.getByLabelText(
+      "Game Executable"
+    ) as HTMLInputElement;
     const submitButton = screen.getByRole("button", { name: "Publish Game" });
 
     await act(async () => {
@@ -303,6 +395,11 @@ describe("PublishYourGames component", () => {
       await fireEvent.change(imageInput, {
         target: {
           files: [new File(["image data"], "test.jpg", { type: "image/jpeg" })],
+        },
+      });
+      await fireEvent.change(exeInput, {
+        target: {
+          files: [new File(["image data"], "Game.exe", { type: ".exe" })],
         },
       });
     });
