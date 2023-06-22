@@ -11,7 +11,6 @@ import Gamepage from "./pages/Gamepage";
 import Library from "./pages/Library";
 import PublishYourGames from "./pages/PublishYourGames";
 import Contact from "./pages/Contact";
-import Placeholder from "./pages/Placeholder";
 import EditData from "./pages/EditData";
 import EditGame from "./pages/EditGame";
 
