@@ -3,8 +3,8 @@ import { callExternalApi } from "./external_api_service";
 const apiServerUrl = process.env.REACT_APP_API_SERVER_URL;
 
 const getGame = async (accessToken: string, gameID: any) => {
-    var form = new FormData();
-    form.append("GameID", gameID);
+  var form = new FormData();
+  form.append("GameID", gameID);
   const config = {
     url: `${apiServerUrl}/api/games/game`,
     method: "POST",
@@ -12,7 +12,7 @@ const getGame = async (accessToken: string, gameID: any) => {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
     },
-    data : form
+    data: form,
   };
 
   const { data, error } = await callExternalApi({ config });
@@ -22,26 +22,21 @@ const getGame = async (accessToken: string, gameID: any) => {
   };
 };
 const getAllGames = async () => {
-const config = {
-  url: `${apiServerUrl}/api/games`,
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    
-  },
-  
-};
+  const config = {
+    url: `${apiServerUrl}/api/games`,
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
 
-const { data, error } = await callExternalApi({ config });
-return {
-  data: data || null,
-  error,
+  const { data, error } = await callExternalApi({ config });
+  return {
+    data: data || null,
+    error,
+  };
 };
-};
-const createGame = async (
-  accessToken: string,
-  gameData: FormData
-) => {
+const createGame = async (accessToken: string, gameData: FormData) => {
   const config = {
     url: `${apiServerUrl}/api/games/publish`,
     method: "POST",
@@ -58,7 +53,59 @@ const createGame = async (
     error,
   };
 };
-const addBasket = async ( accessToken: string, userData: FormData) => {
+
+const getDevelopedGames = async (accessToken: string, userData: FormData) => {
+  const config = {
+    url: `${apiServerUrl}/api/games/devGames/`,
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    },
+    data: userData,
+  };
+  const { data, error } = await callExternalApi({ config });
+  return {
+    data: data || null,
+    error,
+  };
+};
+
+const removeGame = async (accessToken: string, userData: FormData) => {
+  const config = {
+    url: `${apiServerUrl}/api/games/removeGame/`,
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    },
+    data: userData,
+  };
+  const { data, error } = await callExternalApi({ config });
+  return {
+    data: data || null,
+    error,
+  };
+};
+
+const editGame = async (accessToken: string, userData: FormData) => {
+  const config = {
+    url: `${apiServerUrl}/api/games/edit/`,
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    },
+    data: userData,
+  };
+  const { data, error } = await callExternalApi({ config });
+  return {
+    data: data || null,
+    error,
+  };
+};
+
+const addBasket = async (accessToken: string, userData: FormData) => {
   const config = {
     url: `${apiServerUrl}/api/games/addbasket`,
     method: "POST",
@@ -66,7 +113,7 @@ const addBasket = async ( accessToken: string, userData: FormData) => {
       "content-type": "application/json",
       Authorization: `Bearer ${accessToken}`,
     },
-    data: userData
+    data: userData,
   };
 
   const { data, error } = await callExternalApi({ config });
@@ -75,4 +122,12 @@ const addBasket = async ( accessToken: string, userData: FormData) => {
     error,
   };
 };
-export { getGame, createGame, getAllGames, addBasket };
+export {
+  getGame,
+  createGame,
+  getAllGames,
+  addBasket,
+  getDevelopedGames,
+  removeGame,
+  editGame,
+};
