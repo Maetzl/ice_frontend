@@ -163,40 +163,45 @@ export default function Profile() {
                     Your Games
                   </h3>
 
-                  <div className="flex flex-wrap mt-4">
-                    {devGames.map((game, index) => (
-                      <div key={index} className=" m-2 bg-gray-700 rounded-lg">
-                        <div className="flex flex-col justify-between h-full p-2">
-                          <div className="text-white">{game.name}</div>
-                          <div className="text-xs text-gray-400">
-                            {game.name}
+                  {devGames != null ? (
+                    <div className="flex flex-wrap mt-4">
+                      {devGames.map((game, index) => (
+                        <div
+                          key={index}
+                          className=" m-2 bg-gray-700 rounded-lg"
+                        >
+                          <div className="flex flex-col justify-between h-full p-2">
+                            <div className="text-white">{game.name}</div>
+                            <div className="text-xs text-gray-400">
+                              {game.name}
+                            </div>
                           </div>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (
+                                window.confirm(
+                                  "Do you really want to delete this game?"
+                                )
+                              ) {
+                                handleDeleteGame(game.gameID);
+                              }
+                            }}
+                            className="px-4 py-2 text-gray-100 bg-red-900 rounded-lg disabled:bg-gray-800 disabled:text-gray-100"
+                          >
+                            Delete Game
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleEditGame(game)}
+                            className="px-4 py-2 text-gray-800 bg-gray-300 rounded-lg disabled:bg-gray-800 disabled:text-gray-100"
+                          >
+                            Edit Game
+                          </button>
                         </div>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            if (
-                              window.confirm(
-                                "Do you really want to delete this game?"
-                              )
-                            ) {
-                              handleDeleteGame(game.gameID);
-                            }
-                          }}
-                          className="px-4 py-2 text-gray-100 bg-red-900 rounded-lg disabled:bg-gray-800 disabled:text-gray-100"
-                        >
-                          Delete Game
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleEditGame(game)}
-                          className="px-4 py-2 text-gray-800 bg-gray-300 rounded-lg disabled:bg-gray-800 disabled:text-gray-100"
-                        >
-                          Edit Game
-                        </button>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  ) : null}
                 </div>
               </div>
             </div>
