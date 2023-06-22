@@ -1,6 +1,7 @@
 import React, { FormEvent, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
+import fileDownload from "js-file-download";
 import {
   getGame,
   addBasket,
@@ -10,6 +11,8 @@ import {
 } from "../services/game_service";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
+import { getProfile } from "../services/profile_service";
+import axios from "axios";
 
 export default function Gamepage() {
   const { user, getAccessTokenSilently } = useAuth0();
@@ -29,8 +32,47 @@ export default function Gamepage() {
   });
   var activeUserID: string;
   var inBasket: boolean = false;
+  const [hasGame, setHasGame] = useState(false);
+  //var hasGame: boolean = false;
 
   useEffect(() => {
+    const initState = async () => {
+      const accessToken = await getAccessTokenSilently();
+      var userID = "";
+      if (user?.sub) {
+        userID = user?.sub.split("|")[1];
+      }
+      activeUserID = userID;
+      var form = new FormData();
+      form.append("UserID", userID);
+      const { data, error } = await getGame(
+        accessToken,
+        new URLSearchParams(location).get("id")
+      );
+
+      console.log("51", userID, form);
+      const userData = await getProfile(accessToken, form);
+
+      if (data[0].comments) {
+        setGame(data[0]);
+      } else {
+        let datatemp = data[0];
+        datatemp.comments = [{ text: "s", authorName: "", authorID: "" }];
+        setGame(datatemp);
+      }
+
+      if (userData.data.games) {
+        for (let i = 0; i < userData.data.games.length; i++) {
+          console.log("before if", userData.data.games[i], game.gameID);
+          if (userData.data.games[i] == game.gameID) {
+            console.log("true", userData.data.games[i], game.gameID);
+            setHasGame(true);
+            break;
+          }
+        }
+      }
+    };
+
     initState();
   }, [location, getAccessTokenSilently, inBasket, comment]);
 
@@ -53,28 +95,7 @@ export default function Gamepage() {
       items: 1,
     },
   };
-  const initState = async () => {
-    const accessToken = await getAccessTokenSilently();
-    var userID = "";
-    if (user?.sub) {
-      userID = user?.sub.split("|")[1];
-    }
-    activeUserID = userID;
-    var form = new FormData();
-    form.append("UserID", userID);
-    const { data, error } = await getGame(
-      accessToken,
-      new URLSearchParams(location).get("id")
-    );
-    console.log(data[0].comments);
-    if (data[0].comments) {
-      setGame(data[0]);
-    } else {
-      let datatemp = data[0];
-      datatemp.comments = [{ text: "s", authorName: "", authorID: "" }];
-      setGame(datatemp);
-    }
-  };
+
   const handlePutInBasket = async () => {
     if (!inBasket) {
       const accessToken = await getAccessTokenSilently();
@@ -136,6 +157,26 @@ export default function Gamepage() {
 
     removeComment(accessToken, form);
   }
+
+  //`https://icegaming.s3.eu-central-1.amazonaws.com/games/${game.gameID}/${game.gameID}.exe`
+
+  const downloadFile = async () => {
+    const fileUrl = `https://icegaming.s3.eu-central-1.amazonaws.com/games/${game.gameID}/${game.gameID}.exe`; // Die URL der herunterzuladenden Datei
+    console.log(fileUrl);
+    try {
+      const response = await fetch(fileUrl);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "Game.exe"; // Der Name der heruntergeladenen Datei
+      link.click();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Fehler beim Herunterladen der Datei:", error);
+    }
+  };
+
   if (game) {
     return (
       <div className="flex justify-center items-start bg-gradient-to-b from-blue-600 to-[#283046] min-h-screen">
@@ -196,14 +237,32 @@ export default function Gamepage() {
             <div className="p-4 mt-5">
               <b>Price:</b> {game.price} €
             </div>
-            <button
-              type="submit"
-              onClick={handlePutInBasket}
-              disabled={inBasket}
-              className="px-4 py-2 text-gray-800 bg-gray-300 rounded-lg disabled:bg-gray-800 disabled:text-gray-100"
-            >
-              Buy game
-            </button>
+            <td>
+              <tr>
+                <th>
+                  <button
+                    type="submit"
+                    onClick={handlePutInBasket}
+                    disabled={inBasket}
+                    className="px-4 py-2 text-gray-800 bg-gray-300 rounded-lg disabled:bg-gray-800 disabled:text-gray-100"
+                  >
+                    Buy game
+                  </button>
+                </th>
+                {hasGame ? (
+                  <th>
+                    <button
+                      type="submit"
+                      onClick={downloadFile}
+                      className="px-4 py-2 text-gray-800 bg-gray-300 rounded-lg disabled:bg-gray-800 disabled:text-gray-100"
+                    >
+                      Download Game
+                    </button>
+                  </th>
+                ) : null}
+              </tr>
+            </td>
+
             <div className="p-4 mt-5">
               <b>Developer:</b> {game.developerName}
               <br />
