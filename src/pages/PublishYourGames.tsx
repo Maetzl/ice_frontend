@@ -234,15 +234,19 @@ export default function PublishYourGames() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900">
+    <div className="min-h-screen bg-gradient-to-b from-blue-600 to-[#283046]">
       <header className="py-4 bg-gray-800">
-        <div className="container px-4 mx-auto">
+        <div className="container flex justify-center px-4 mx-auto">
           <h1 className="text-2xl font-bold text-white">Publish Your Game</h1>
         </div>
       </header>
-      <main className="container px-4 py-8 mx-auto">
-        <form id="publishGameForm" onSubmit={handleSubmit}>
-          <div className="mb-4">
+      <main className="flex justify-center px-4 py-8 mx-auto ">
+        <form
+          className="justify-center"
+          id="publishGameForm"
+          onSubmit={handleSubmit}
+        >
+          <div className="mb-4 ">
             <label htmlFor="gameName" className="block mb-2 text-white">
               Game Name
             </label>
@@ -250,7 +254,7 @@ export default function PublishYourGames() {
               type="text"
               id="gameName"
               name="name"
-              className="w-full px-3 py-2 text-white bg-gray-700 border rounded-lg"
+              className="px-3 py-2 text-white bg-gray-700 border rounded-lg w-80 sm:w-96 focus:outline-none focus:ring focus:border-blue-300"
               value={game.name}
               onChange={handleOnChange}
             />
@@ -262,7 +266,7 @@ export default function PublishYourGames() {
             <textarea
               id="gameDescription"
               name="description"
-              className="w-full px-3 py-2 text-white bg-gray-700 border rounded-lg"
+              className="px-3 py-2 text-white bg-gray-700 border rounded-lg w-80 sm:w-96 focus:outline-none focus:ring focus:border-blue-300"
               value={game.description}
               onChange={handleOnChange}
             ></textarea>
@@ -277,7 +281,7 @@ export default function PublishYourGames() {
               value={game.price}
               onChange={handlePriceChange}
               step="0.01"
-              className="text-white pl-1 bg-gray-700 border rounded-lg"
+              className="pl-1 text-white bg-gray-700 border rounded-lg"
             />
             {priceError && <p className="text-red-500">{priceError}</p>}
           </div>
@@ -291,12 +295,12 @@ export default function PublishYourGames() {
                 onChange={handleTagChange}
                 onKeyDown={handleKeyDownTag}
                 value={tempTag}
-                className="text-white pl-1 bg-gray-700 border rounded-lg"
+                className="pl-1 text-white bg-gray-700 border rounded-lg"
               ></input>
               <button
                 id="addTag"
                 type="button"
-                className="px-2 text-white  bg-gray-700 border rounded-lg"
+                className="px-2 text-white bg-gray-700 border rounded-lg"
                 onClick={() => handleAddTag()}
               >
                 Add Tag
@@ -308,7 +312,7 @@ export default function PublishYourGames() {
                   key={index}
                   type="button"
                   onClick={() => handleDeleteTag(index)}
-                  className="px-2 py-1 text-white  bg-gray-700 border rounded-lg"
+                  className="px-2 py-1 text-white bg-gray-700 border rounded-lg"
                 >
                   <span>{singleTag}</span>
                 </button>

@@ -43,7 +43,7 @@ const ContactPage: React.FC = () => {
     }
   };
   return (
-    <div className="flex flex-col min-h-screen bg-gray-900">
+    <div className="flex flex-col min-h-screen bg-gradient-to-b from-blue-600 to-[#283046]">
       <header className="px-4 py-4 bg-gray-800">
         <div className="container mx-auto">
           <h1 className="text-2xl font-bold text-center text-white">
