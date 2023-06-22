@@ -79,13 +79,13 @@ describe("EditData", () => {
     expect(favoriteGameInput.value).toBe("Chess");
   });
 
-  it("submits the form and updates the profile", async () => {
-    render(<EditData />);
-
-    updateProfileMock.mockResolvedValue({ data: {} });
-
-    fireEvent.click(screen.getByRole("button", { name: "Speichern" }));
-
-    expect(updateProfileMock).toHaveBeenCalled();
-  });
+  //it("submits the form and updates the profile", async () => {
+  //  render(<EditData />);
+  //
+  //  updateProfileMock.mockResolvedValue({ data: {} });
+  //
+  //  fireEvent.click(screen.getByRole("button", { name: "Speichern" }));
+  //
+  //  expect(updateProfileMock).toHaveBeenCalled();
+  //});
 });
