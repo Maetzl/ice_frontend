@@ -241,7 +241,7 @@ export default function EditGame() {
           </div>
           <button
             type="submit"
-            className="px-4 py-2 text-gray-800 bg-gray-300 rounded-lg disabled:bg-gray-800 disabled:text-gray-100"
+            className="px-4 py-2 text-gray-800 hover:bg-gray-200 bg-gray-300 rounded-lg disabled:bg-gray-800 disabled:text-gray-100"
             disabled={!isFormValid}
           >
             Edit Game

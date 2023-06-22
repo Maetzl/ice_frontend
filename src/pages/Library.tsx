@@ -44,7 +44,7 @@ export default function Library() {
             <div className="flex ">
               {library.length > 0 ? (
                 library.map((game, index) => (
-                  <div className="relative">
+                  <div className="hover:bg-[#2f3853] relative">
                     <img
                       src={game.images[0]}
                       onClick={() => handleSetGame(game)}
