@@ -145,10 +145,12 @@ export default function Profile() {
                       Benutzer Information
                     </h3>
                     <div className="p-1 bg-gray-700 shadow-md">
-                      <p className="text-white">UserID: {userDataObject._id}</p>
+                      <p className="text-white">
+                        UserID: {userDataObject.playerID}
+                      </p>
                       <p className="text-white">Name: {userDataObject.name}</p>
                       <p className="text-white">
-                        description: {userDataObject.description}
+                        Description: {userDataObject.description}
                       </p>
                       <p className="text-white">
                         Country: {userDataObject.country}
@@ -158,23 +160,8 @@ export default function Profile() {
                 </div>
                 <div className="mt-8">
                   <h3 className="mb-4 text-xl font-bold text-white">
-                    Lieblingsspiel
+                    Your Games
                   </h3>
-                  <div className="w-24 h-24 bg-gray-700 rounded-lg">
-                    <div className="flex flex-col justify-between h-full p-2">
-                      <div className="text-white">{favoriteGameTime}</div>
-                      <div className="text-xs text-gray-400">Spielname</div>
-                    </div>
-                  </div>
-                </div>
-                <div className="mt-8">
-                  <h3 className="mb-4 text-xl font-bold text-white">Spiele</h3>
-                  <input
-                    className="px-3 py-2 text-white bg-gray-700 border rounded-lg w-50"
-                    type="text"
-                    id="spiele"
-                    placeholder="Suche nach Spiel"
-                  />
 
                   <div className="flex flex-wrap mt-4">
                     {devGames.map((game, index) => (
@@ -187,7 +174,15 @@ export default function Profile() {
                         </div>
                         <button
                           type="button"
-                          onClick={() => handleDeleteGame(game.gameID)}
+                          onClick={() => {
+                            if (
+                              window.confirm(
+                                "Do you really want to delete this game?"
+                              )
+                            ) {
+                              handleDeleteGame(game.gameID);
+                            }
+                          }}
                           className="px-4 py-2 text-gray-100 bg-red-900 rounded-lg disabled:bg-gray-800 disabled:text-gray-100"
                         >
                           Delete Game
