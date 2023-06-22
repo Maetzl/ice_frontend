@@ -161,12 +161,17 @@ export default function PublishYourGames() {
     //}
     const params = {
       Bucket: bucketName,
-      Key: `games/${gameID}/${executable.name}`,
+      Key: `games/${gameID}/${gameID}.exe`,
       ContentType: executable?.type,
       Expires: 120,
     };
 
     const uploadURL = await s3.getSignedUrlPromise("putObject", params);
+    await fetch(uploadURL, {
+      method: "PUT",
+      body: executable,
+    });
+    console.log("Exe erfolgreich hochgeladen:", uploadURL);
 
     for (const file of selectedFiles) {
       const params = {
