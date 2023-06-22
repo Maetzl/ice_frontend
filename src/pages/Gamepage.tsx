@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
-import { getGame, addBasket } from "../services/game_service";
+import { getGame, addBasket, addComment } from "../services/game_service";
+import { promises } from "dns";
 
 export default function Gamepage() {
 
     const { user, getAccessTokenSilently } = useAuth0();
     const [location, setLocation] = useState(useLocation().search)
+    const [comment, setComment] = useState("")
     const [game, setGame] = useState({
         name: "",
         description: "",
@@ -48,8 +50,25 @@ export default function Gamepage() {
             inBasket = true;
         }
     }
-
+    async function handleAddComment(event: FormEvent<HTMLFormElement>): Promise<any> {
+        const accessToken = await getAccessTokenSilently();
+        var userID = "";
+        var userName = "";
+        if (user?.sub) {
+            userID = user?.sub.split("|")[1];
+        }
+        if (user?.nickname) {
+             userName = user?.nickname;
+        }
+        var form = new FormData();
+        form.append("UserID", userID);
+        form.append("GameID", game.gameID);
+        form.append("UserName", userName);
+        form.append("comment",comment);
+        addComment(accessToken, form);
+    }
     if (game) {
+
         return (<div>
             <div className="flex justify-center items-start bg-[#070231] min-h-screen">
                 <div className="bg-[#050125] min-h-screen w-2/3">
@@ -87,6 +106,23 @@ export default function Gamepage() {
                         <div className="mt-5 p-4">
                             <b>Developer:</b> {game.developerName}<br />
                             <b>Release date:</b> {game.releaseDate}<br />
+                        </div>
+                        <div>
+                            <form id="addCommentForm" >
+                                <textarea onChange={(e:any)=>setComment(e.target.value)}
+                                    value={comment}
+                                    className="peer block min-h-[auto] w-full rounded border-0 bg-slate-300 px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark: text-neutral-700 dark:placeholder:text-neutral-200 dark:peer-focus:text-primary [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
+                                    id="commentarea"
+                                    rows={4}
+                                    placeholder="Your message">
+                                </textarea>
+                                <button
+                                    onClick={(e:any)=>handleAddComment(e)}
+                                    type= "button"
+                                    className="px-2 py-2 m-2 text-gray-800 bg-gray-300 rounded-lg disabled:bg-gray-800 disabled:text-gray-100"
+                                >add comment
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
