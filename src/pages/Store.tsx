@@ -116,15 +116,16 @@ const Store: React.FC = () => {
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             {filteredGames.length > 0 ? (
               filteredGames.map((game) => (
-                <div className="flex flex-col items-center game" key={game._id}>
+                <div
+                  className="hover:bg-[#2f3853] flex flex-col items-center game"
+                  key={game._id}
+                >
                   <Link to={`/gamepage?id=${game.gameID}`}>
-                    <div className="w-full h-48">
-                      <img
-                        className="object-cover w-full h-full"
-                        src={`${game.images[0]}`}
-                        alt={game.name}
-                      />
-                    </div>
+                    <img
+                      className="object-cover w-full h-auto"
+                      src={`${game.images[0]}`}
+                      alt={game.name}
+                    />
                   </Link>
                   <p className="mt-2 text-white">{game.name}</p>
                   <p className="mt-1 text-white">

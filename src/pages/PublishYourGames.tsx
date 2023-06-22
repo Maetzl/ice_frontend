@@ -355,7 +355,7 @@ export default function PublishYourGames() {
               <button
                 id="addTag"
                 type="button"
-                className="px-2 text-white bg-gray-700 border rounded-lg"
+                className="px-2 text-white hover:bg-gray-600 bg-gray-700 border rounded-lg"
                 onClick={() => handleAddTag()}
               >
                 Add Tag
@@ -408,7 +408,7 @@ export default function PublishYourGames() {
           </div>
           <button
             type="submit"
-            className="px-4 py-2 text-gray-800 bg-gray-300 rounded-lg disabled:bg-gray-800 disabled:text-gray-100"
+            className="px-4 py-2 text-gray-800 hover:bg-gray-200 bg-gray-300 rounded-lg disabled:bg-gray-800 disabled:text-gray-100"
             disabled={!isFormValid}
           >
             Publish Game

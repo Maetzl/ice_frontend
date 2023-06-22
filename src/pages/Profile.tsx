@@ -182,14 +182,14 @@ export default function Profile() {
                             handleDeleteGame(game.gameID);
                           }
                         }}
-                        className="px-5 py-2 text-gray-100 bg-red-900 rounded-lg disabled:bg-gray-800 disabled:text-gray-100"
+                        className="px-5 py-2 text-gray-100 hover:bg-red-800 bg-red-900 rounded-lg disabled:bg-gray-800 disabled:text-gray-100"
                       >
                         Delete Game
                       </button>
                       <button
                         type="button"
                         onClick={() => handleEditGame(game)}
-                        className="px-4 py-2 text-gray-800 bg-gray-300 rounded-lg disabled:bg-gray-800 disabled:text-gray-100"
+                        className="px-4 py-2 text-gray-800 hover:bg-gray-200 bg-gray-300 rounded-lg disabled:bg-gray-800 disabled:text-gray-100"
                       >
                         Edit Game
                       </button>
