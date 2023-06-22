@@ -24,11 +24,18 @@ const Store: React.FC = () => {
 
   useEffect(() => {
     const fetchGames = async () => {
-      const { data, error } = await getAllGames();
-      if (data) {
-        setGames(data);
-      }
-      if (error) {
+      try {
+        const response = await getAllGames();
+        const { data, error } = response;
+
+        if (data) {
+          setGames(data);
+        }
+
+        if (error) {
+          console.log("Error fetching games:", error);
+        }
+      } catch (error) {
         console.log("Error fetching games:", error);
       }
     };
