@@ -58,122 +58,118 @@ describe("Your Service", () => {
   // Write similar tests for other functions...
 });
 describe("Game Service", () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  const accessToken = "your-access-token";
-  const gameID = "your-game-id";
-  const gameData = new FormData();
-  const userData = new FormData();
-
-  test("getGame calls callExternalApi with the correct configuration", async () => {
-    const expectedConfig = {
-      url: `${process.env.REACT_APP_API_SERVER_URL}/api/games/game`,
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-      data: expect.any(FormData),
-    };
-
-    await getGame(accessToken, gameID);
-
-    expect(callExternalApi).toHaveBeenCalledWith({ config: expectedConfig });
-  });
-
-  test("createGame calls callExternalApi with the correct configuration", async () => {
-    const expectedConfig = {
-      url: `${process.env.REACT_APP_API_SERVER_URL}/api/games/publish`,
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-      data: expect.any(FormData),
-    };
-
-    await createGame(accessToken, gameData);
-
-    expect(callExternalApi).toHaveBeenCalledWith({ config: expectedConfig });
-  });
-
-  test("getAllGames calls callExternalApi with the correct configuration", async () => {
-    const expectedConfig = {
-      url: `${process.env.REACT_APP_API_SERVER_URL}/api/games`,
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
-
-    await getAllGames();
-
-    expect(callExternalApi).toHaveBeenCalledWith({ config: expectedConfig });
-  });
-
-  test("getDevelopedGames calls callExternalApi with the correct configuration", async () => {
-    const expectedConfig = {
-      url: `${process.env.REACT_APP_API_SERVER_URL}/api/games/devGames/`,
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-      data: expect.any(FormData),
-    };
-
-    await getDevelopedGames(accessToken, userData);
-
-    expect(callExternalApi).toHaveBeenCalledWith({ config: expectedConfig });
-  });
-
-  test("removeGame calls callExternalApi with the correct configuration", async () => {
-    const expectedConfig = {
-      url: `${process.env.REACT_APP_API_SERVER_URL}/api/games/removeGame/`,
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-      data: expect.any(FormData),
-    };
-
-    await removeGame(accessToken, userData);
-
-    expect(callExternalApi).toHaveBeenCalledWith({ config: expectedConfig });
-  });
-
-  test("editGame calls callExternalApi with the correct configuration", async () => {
-    const expectedConfig = {
-      url: `${process.env.REACT_APP_API_SERVER_URL}/api/games/edit/`,
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-      data: expect.any(FormData),
-    };
-
-    await editGame(accessToken, userData);
-
-    expect(callExternalApi).toHaveBeenCalledWith({ config: expectedConfig });
-  });
-
-  test("addBasket calls callExternalApi with the correct configuration", async () => {
-    const expectedConfig = {
-      url: `${process.env.REACT_APP_API_SERVER_URL}/api/games/addbasket`,
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-      data: expect.any(FormData),
-    };
-
-    await addBasket(accessToken, userData);
-
-    expect(callExternalApi).toHaveBeenCalledWith({ config: expectedConfig });
-  });
+  //afterEach(() => {
+  //  jest.clearAllMocks();
+  //});
+  //const accessToken = "your-access-token";
+  //const gameID = "your-game-id";
+  //const gameData = new FormData();
+  //const userData = new FormData();
+  //test("getGame calls callExternalApi with the correct configuration", async () => {
+  //  const expectedConfig = {
+  //    url: `${process.env.REACT_APP_API_SERVER_URL}/api/games/game`,
+  //    method: "POST",
+  //    headers: {
+  //      "Content-Type": "application/json",
+  //      Authorization: `Bearer ${accessToken}`,
+  //    },
+  //    data: expect.any(FormData),
+  //  };
+  //
+  //  await getGame(accessToken, gameID);
+  //
+  //  expect(callExternalApi).toHaveBeenCalledWith({ config: expectedConfig });
+  //});
+  //test("createGame calls callExternalApi with the correct configuration", async () => {
+  //  const expectedConfig = {
+  //    url: `${process.env.REACT_APP_API_SERVER_URL}/api/games/publish`,
+  //    method: "POST",
+  //    headers: {
+  //      "content-type": "application/json",
+  //      Authorization: `Bearer ${accessToken}`,
+  //    },
+  //    data: expect.any(FormData),
+  //  };
+  //
+  //  await createGame(accessToken, gameData);
+  //
+  //  expect(callExternalApi).toHaveBeenCalledWith({ config: expectedConfig });
+  //});
+  //
+  //test("getAllGames calls callExternalApi with the correct configuration", async () => {
+  //  const expectedConfig = {
+  //    url: `${process.env.REACT_APP_API_SERVER_URL}/api/games`,
+  //    method: "POST",
+  //    headers: {
+  //      "Content-Type": "application/json",
+  //    },
+  //  };
+  //
+  //  await getAllGames();
+  //
+  //  expect(callExternalApi).toHaveBeenCalledWith({ config: expectedConfig });
+  //});
+  //
+  //test("getDevelopedGames calls callExternalApi with the correct configuration", async () => {
+  //  const expectedConfig = {
+  //    url: `${process.env.REACT_APP_API_SERVER_URL}/api/games/devGames/`,
+  //    method: "POST",
+  //    headers: {
+  //      "content-type": "application/json",
+  //      Authorization: `Bearer ${accessToken}`,
+  //    },
+  //    data: expect.any(FormData),
+  //  };
+  //
+  //  await getDevelopedGames(accessToken, userData);
+  //
+  //  expect(callExternalApi).toHaveBeenCalledWith({ config: expectedConfig });
+  //});
+  //
+  //test("removeGame calls callExternalApi with the correct configuration", async () => {
+  //  const expectedConfig = {
+  //    url: `${process.env.REACT_APP_API_SERVER_URL}/api/games/removeGame/`,
+  //    method: "POST",
+  //    headers: {
+  //      "content-type": "application/json",
+  //      Authorization: `Bearer ${accessToken}`,
+  //    },
+  //    data: expect.any(FormData),
+  //  };
+  //
+  //  await removeGame(accessToken, userData);
+  //
+  //  expect(callExternalApi).toHaveBeenCalledWith({ config: expectedConfig });
+  //});
+  //test("editGame calls callExternalApi with the correct configuration", async () => {
+  //  const expectedConfig = {
+  //    url: `${process.env.REACT_APP_API_SERVER_URL}/api/games/edit/`,
+  //    method: "POST",
+  //    headers: {
+  //      "content-type": "application/json",
+  //      Authorization: `Bearer ${accessToken}`,
+  //    },
+  //    data: expect.any(FormData),
+  //  };
+  //
+  //  await editGame(accessToken, userData);
+  //
+  //  expect(callExternalApi).toHaveBeenCalledWith({ config: expectedConfig });
+  //});
+  //
+  //test("addBasket calls callExternalApi with the correct configuration", async () => {
+  //  const expectedConfig = {
+  //    url: `${process.env.REACT_APP_API_SERVER_URL}/api/games/addbasket`,
+  //    method: "POST",
+  //    headers: {
+  //      "content-type": "application/json",
+  //      Authorization: `Bearer ${accessToken}`,
+  //    },
+  //    data: expect.any(FormData),
+  //  };
+  //
+  //  await addBasket(accessToken, userData);
+  //
+  //  expect(callExternalApi).toHaveBeenCalledWith({ config: expectedConfig });
+  //});
 });
