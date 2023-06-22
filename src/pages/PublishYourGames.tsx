@@ -10,8 +10,10 @@ export default function PublishYourGames() {
 
   const [priceError, setPriceError] = useState<string>("");
   const [selectedImages, setSelectedImage] = useState<File[] | null>(null);
+  const [selectedExe, setSelectedExe] = useState<File | null>(null);
   const [isFormValid, setIsFormValid] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessageImg, setErrorMessageImg] = useState("");
+  const [errorMessageExe, setErrorMessageExe] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [tempTag, setTempTag] = useState("");
   const [tagError, setTagError] = useState<string>("");
@@ -37,13 +39,14 @@ export default function PublishYourGames() {
         game.price >= 0 &&
         selectedImages != null &&
         selectedImages.length > 0 &&
-        selectedImages.length <= 7
+        selectedImages.length <= 7 &&
+        selectedExe != null
     );
-  }, [game, selectedImages]);
+  }, [game, selectedImages, selectedExe]);
 
   const publishGame = async (e: { preventDefault: () => void }) => {
-    if (!user || !selectedImages || !isFormValid) {
-      console.log(user, selectedImages, isFormValid);
+    if (!user || !selectedImages || !isFormValid || !selectedExe) {
+      console.log(user, selectedImages, !selectedExe, isFormValid);
       console.error(
         "Error: Please ensure all fields are filled in correctly and try again."
       );
@@ -55,7 +58,8 @@ export default function PublishYourGames() {
       const accessToken = await getAccessTokenSilently();
       const userID = user.sub?.split("|")[1] || "";
       const gameID = generateUniqueGameID();
-      const links = (await uploadImageToS3games(gameID, selectedImages)) || "";
+      const links =
+        (await uploadToS3games(gameID, selectedImages, selectedExe)) || "";
       const date = `${currentDate.getDate()}/${
         currentDate.getMonth() + 1
       }/${currentDate.getFullYear()}`;
@@ -92,10 +96,11 @@ export default function PublishYourGames() {
   const handleImagesChange = (e: { target: { files: FileList | null } }) => {
     if (e.target.files && e.target.files.length > 0) {
       if (e.target.files.length > 7) {
-        setErrorMessage("Maximum picture count is 7");
+        setErrorMessageImg("Maximum picture count is 7");
+        setSelectedImage(null);
         return;
       }
-      setErrorMessage("");
+      setErrorMessageImg("");
 
       let fileNumber = 0;
       const files =
@@ -112,9 +117,38 @@ export default function PublishYourGames() {
     }
   };
 
-  const uploadImageToS3games = async (
+  const handleExeChange = (e: { target: { files: FileList | null } }) => {
+    if (e.target.files && e.target.files.length > 0) {
+      if (e.target.files.length != 1) {
+        setErrorMessageExe("You can only upload one .exe");
+        setSelectedExe(null);
+        return;
+      }
+      if (
+        e.target.files[0].name.split(".")[
+          e.target.files[0].name.split(".").length - 1
+        ] != "exe"
+      ) {
+        setErrorMessageExe("You can only upload .exe");
+        setSelectedExe(null);
+        return;
+      }
+
+      setErrorMessageExe("");
+
+      let fileNumber = 0;
+      const files = e.target.files[0];
+
+      setSelectedExe(files);
+    } else {
+      setSelectedExe(null);
+    }
+  };
+
+  const uploadToS3games = async (
     gameID: string,
-    selectedFiles: File[]
+    selectedFiles: File[],
+    executable: File
   ): Promise<string[] | undefined> => {
     const updatedImgLink = [];
 
@@ -125,6 +159,14 @@ export default function PublishYourGames() {
     //  console.error("Maximum picture count is 7");
     //  return;
     //}
+    const params = {
+      Bucket: bucketName,
+      Key: `games/${gameID}/${executable.name}`,
+      ContentType: executable?.type,
+      Expires: 120,
+    };
+
+    const uploadURL = await s3.getSignedUrlPromise("putObject", params);
 
     for (const file of selectedFiles) {
       const params = {
@@ -328,7 +370,24 @@ export default function PublishYourGames() {
               multiple
               onChange={handleImagesChange}
             />
-            {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+            {errorMessageImg && (
+              <p className="text-red-500">{errorMessageImg}</p>
+            )}
+          </div>
+          <div className="mb-4">
+            <label htmlFor="gameExe" className="block mb-2 text-white">
+              Game Executable
+            </label>
+            <input
+              type="file"
+              id="gameExe"
+              className="text-white"
+              accept=".exe"
+              onChange={handleExeChange}
+            />
+            {errorMessageExe && (
+              <p className="text-red-500">{errorMessageExe}</p>
+            )}
           </div>
           <button
             type="submit"
