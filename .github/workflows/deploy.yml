@@ -34,6 +34,13 @@ jobs:
           file: ./coverage/cobertura-coverage.xml
           flags: unittests # optional
           name: codecov-umbrella # optional
+      - name: Railway Deploy
+       # You may pin to the exact commit or the version.
+       # uses: bervProject/railway-deploy@28e06ba62ca4186e60db75554ee73dda1e4e5450
+        uses: bervProject/railway-deploy@0.1.2-beta
+        with:
+           # The specific service target
+          service: af0e5bca-2a7b-4a08-a323-f6e3eaee248d
       #- name: 🐳 Login to Docker Hub
       #  uses: docker/login-action@v2
       #  with:
