@@ -26,7 +26,7 @@ export default function Gamepage() {
     useEffect(() => {
         initState();
     }, [location, getAccessTokenSilently, inBasket, comment]);
-    
+
     const initState = async () => {
         const accessToken = await getAccessTokenSilently();
         var userID = "";
@@ -37,12 +37,13 @@ export default function Gamepage() {
         var form = new FormData();
         form.append("UserID", userID);
         const { data, error } = await getGame(accessToken, new URLSearchParams(location).get('id'));
+        console.log(data[0].comments);
         if (data[0].comments) {
             setGame(data[0])
         }
         else {
             let datatemp = data[0];
-            datatemp.comments = [{ text: "", authorName: "", authorID: "" }];
+            datatemp.comments = [{ text: "s", authorName: "", authorID: "" }];
             setGame(datatemp);
         }
     };
@@ -72,7 +73,7 @@ export default function Gamepage() {
             userName = user?.nickname;
         }
         for (let i = 0; i < game.comments.length; i++) {
-            if(game.comments[i].authorID==userID){
+            if (game.comments[i].authorID == userID) {
                 existingComment = true;
                 break;
             }
@@ -82,9 +83,9 @@ export default function Gamepage() {
         form.append("GameID", game.gameID);
         form.append("UserName", userName);
         form.append("comment", comment);
-        if(existingComment){
+        if (existingComment) {
             replaceComment(accessToken, form);
-        }else{
+        } else {
             addComment(accessToken, form);
         }
         setComment("");
@@ -95,9 +96,12 @@ export default function Gamepage() {
         if (user?.sub) {
             userID = user?.sub.split("|")[1];
         }
+        const tempgame = game.comments.filter(obj => obj.authorID !== userID);
         var form = new FormData();
         form.append("UserID", userID)
         form.append("GameID", game.gameID);
+        form.append("comments", tempgame.toString())
+
         removeComment(accessToken, form);
     }
     if (game) {
@@ -148,7 +152,7 @@ export default function Gamepage() {
                                         <div className=" text-left border-b-2 border-gray-800 left-0">
                                             {comment.authorName}:
                                         </div>
-                                        </div>
+                                    </div>
                                     <div className="text-left pl-3 border-b-2 ">
                                         {comment.text}
                                     </div>
@@ -171,9 +175,9 @@ export default function Gamepage() {
                                 >add/replace comment
                                 </button>
                                 <button className=" px-2 py-2 m-2 text-gray-200 bg-red-900 rounded-lg disabled:bg-gray-800 disabled:text-gray-100" type="button"
-                                        onClick={(e: any) => handleDeleteComment(e)}>
-                                            delete comment
-                                        </button>
+                                    onClick={(e: any) => handleDeleteComment(e)}>
+                                    delete comment
+                                </button>
                             </form>
                         </div>
                     </div>
