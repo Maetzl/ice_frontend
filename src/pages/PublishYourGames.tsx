@@ -102,6 +102,14 @@ export default function PublishYourGames() {
       }
       setErrorMessageImg("");
 
+      for (let i = 0; i < e.target.files.length; i++) {
+        if (!e.target.files[i].type.includes("image")) {
+          setErrorMessageImg("You can upload only image files");
+          setSelectedImage(null);
+          return;
+        }
+      }
+
       let fileNumber = 0;
       const files =
         e.target.files instanceof FileList
@@ -161,12 +169,17 @@ export default function PublishYourGames() {
     //}
     const params = {
       Bucket: bucketName,
-      Key: `games/${gameID}/${executable.name}`,
+      Key: `games/${gameID}/${gameID}.exe`,
       ContentType: executable?.type,
       Expires: 120,
     };
 
     const uploadURL = await s3.getSignedUrlPromise("putObject", params);
+    await fetch(uploadURL, {
+      method: "PUT",
+      body: executable,
+    });
+    console.log("Exe erfolgreich hochgeladen:", uploadURL);
 
     for (const file of selectedFiles) {
       const params = {
