@@ -116,95 +116,91 @@ export default function Profile() {
             </h1>
           </div>
         </header>
-        <main className="container flex justify-center px-10 py-8 mx-auto">
-          <div className="grid grid-cols-3 gap-8">
-            <div className="col-span-2">
-              <div className="p-8 bg-gray-800 rounded-lg shadow-lg">
-                <div className="flex items-center mb-8">
-                  <div className="w-24 h-24 mr-4 bg-gray-700 rounded-full">
-                    <img
-                      src={imageSrc}
-                      alt="Profilbild"
-                      className="rounded-full"
-                    />
-                  </div>
-                  <div>
-                    <h2 className="text-2xl font-bold text-white">
-                      {user?.nickname}
-                    </h2>
-                    <Link to={`/EditData`} state={userData}>
-                      <button className="text-sm text-gray-300 hover:text-white">
-                        Edit
-                      </button>
-                    </Link>
-                  </div>
+        {/*<main className="container flex justify-center px-10 py-8 mx-auto">*/}
+        <div className="">
+          <div className="px-80 py-20 col-span-2">
+            <div className="p-8 bg-gray-800 rounded-lg shadow-lg">
+              <div className="flex items-center mb-8 w">
+                <div className="w-24 h-24 mr-4 bg-gray-700 rounded-full ">
+                  <img
+                    src={imageSrc}
+                    alt="Profilbild"
+                    className="rounded-full"
+                  />
                 </div>
-                <div className="col-span-1">
-                  <div className="p-8 bg-gray-800 rounded-lg shadow-lg">
-                    <h3 className="mb-4 text-base font-bold text-white">
-                      Benutzer Information
-                    </h3>
-                    <div className="p-1 bg-gray-700 shadow-md">
-                      <p className="text-white">
-                        UserID: {userDataObject.playerID}
-                      </p>
-                      <p className="text-white">Name: {userDataObject.name}</p>
-                      <p className="text-white">
-                        Description: {userDataObject.description}
-                      </p>
-                      <p className="text-white">
-                        Country: {userDataObject.country}
-                      </p>
-                    </div>
-                  </div>
+                <div>
+                  <h2 className="text-2xl font-bold text-white">
+                    {userDataObject.name}
+                  </h2>
+                  <Link to={`/EditData`} state={userData}>
+                    <button className="text-sm text-gray-300 hover:text-white">
+                      Edit
+                    </button>
+                  </Link>
                 </div>
-                <div className="mt-8">
-                  <h3 className="mb-4 text-xl font-bold text-white">
-                    Your Games
+              </div>
+              <div className="col-span-1 place-self-center">
+                <div className="w-max  bg-gray-800 rounded-lg shadow-lg">
+                  <h3 className="mb-4 text-base font-bold text-white">
+                    Benutzer Information
                   </h3>
-
-                  <div className="flex flex-wrap mt-4">
-                    {devGames.map((game, index) => (
-                      <div
-                        key={index}
-                        className="m-2 space-x-2 space-y-2 bg-gray-700 rounded-lg 2 "
-                      >
-                        <div className="flex flex-col justify-between h-full p-2">
-                          <div className="text-white">{game.name}</div>
-                          <div className="text-xs text-gray-400">
-                            {game.name}
-                          </div>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            if (
-                              window.confirm(
-                                "Do you really want to delete this game?"
-                              )
-                            ) {
-                              handleDeleteGame(game.gameID);
-                            }
-                          }}
-                          className="px-5 py-2 text-gray-100 bg-red-900 rounded-lg disabled:bg-gray-800 disabled:text-gray-100"
-                        >
-                          Delete Game
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleEditGame(game)}
-                          className="px-4 py-2 text-gray-800 bg-gray-300 rounded-lg disabled:bg-gray-800 disabled:text-gray-100"
-                        >
-                          Edit Game
-                        </button>
-                      </div>
-                    ))}
+                  <div className="p-4 bg-gray-700 shadow-md rounded-xl">
+                    {/*<p className="text-white py-3">
+                      Name: {userDataObject.name}
+                    </p>*/}
+                    <p className="text-white py-3">
+                      Description: {userDataObject.description}
+                    </p>
+                    <p className="text-white py-3">
+                      Country: {userDataObject.country}
+                    </p>
                   </div>
+                </div>
+              </div>
+              <div className="mt-8">
+                <h3 className="mb-4 text-xl font-bold text-white">
+                  Your Games
+                </h3>
+                <div className="flex flex-wrap mt-4">
+                  {devGames.map((game, index) => (
+                    <div
+                      key={index}
+                      className="m-2 space-x-2 space-y-2 bg-gray-700 rounded-lg 2 "
+                    >
+                      <div className="flex flex-col justify-between h-full p-2">
+                        <div className="text-white">{game.name}</div>
+                        <div className="text-xs text-gray-400">{game.name}</div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (
+                            window.confirm(
+                              "Do you really want to delete this game?"
+                            )
+                          ) {
+                            handleDeleteGame(game.gameID);
+                          }
+                        }}
+                        className="px-5 py-2 text-gray-100 bg-red-900 rounded-lg disabled:bg-gray-800 disabled:text-gray-100"
+                      >
+                        Delete Game
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleEditGame(game)}
+                        className="px-4 py-2 text-gray-800 bg-gray-300 rounded-lg disabled:bg-gray-800 disabled:text-gray-100"
+                      >
+                        Edit Game
+                      </button>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
           </div>
-        </main>
+        </div>
+        {/*</main>*/}
       </div>
     );
   } else {
