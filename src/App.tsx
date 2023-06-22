@@ -13,6 +13,7 @@ import PublishYourGames from "./pages/PublishYourGames";
 import Contact from "./pages/Contact";
 import Placeholder from "./pages/Placeholder";
 import EditData from "./pages/EditData";
+import EditGame from "./pages/EditGame";
 
 function App() {
   return (
@@ -21,7 +22,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Index />} />
         <Route path="/store" element={<Store />} />
-        <Route path="/gamepage" element={< Gamepage />}/>
+        <Route path="/gamepage" element={<Gamepage />} />
         <Route
           path="/library"
           element={<AuthenticationGuard component={Library} />}
@@ -43,6 +44,10 @@ function App() {
         <Route
           path="/editData"
           element={<AuthenticationGuard component={EditData} />}
+        />
+        <Route
+          path="/editGame"
+          element={<AuthenticationGuard component={EditGame} />}
         />
       </Routes>
       <Footer></Footer>
