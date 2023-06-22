@@ -47,7 +47,6 @@ describe("EditData", () => {
     expect(screen.getByLabelText("Name")).toBeInTheDocument();
     expect(screen.getByLabelText("Country")).toBeInTheDocument();
     expect(screen.getByLabelText("Description")).toBeInTheDocument();
-    expect(screen.getByLabelText("Lieblingsspiel")).toBeInTheDocument();
     expect(screen.getByLabelText("Bild hochladen")).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: "Speichern" })
@@ -62,21 +61,16 @@ describe("EditData", () => {
     const descriptionInput = screen.getByLabelText(
       "Description"
     ) as HTMLTextAreaElement;
-    const favoriteGameInput = screen.getByLabelText(
-      "Lieblingsspiel"
-    ) as HTMLInputElement;
 
     fireEvent.change(nameInput, { target: { value: "John Doe" } });
     fireEvent.change(countryInput, { target: { value: "Germany" } });
     fireEvent.change(descriptionInput, {
       target: { value: "Lorem ipsum dolor sit amet" },
     });
-    fireEvent.change(favoriteGameInput, { target: { value: "Chess" } });
 
     expect(nameInput.value).toBe("John Doe");
     expect(countryInput.value).toBe("Germany");
     expect(descriptionInput.value).toBe("Lorem ipsum dolor sit amet");
-    expect(favoriteGameInput.value).toBe("Chess");
   });
 
   //it("submits the form and updates the profile", async () => {

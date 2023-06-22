@@ -12,7 +12,6 @@ import {
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { getProfile } from "../services/profile_service";
-import axios from "axios";
 
 export default function Gamepage() {
   const { user, getAccessTokenSilently } = useAuth0();
@@ -57,7 +56,7 @@ export default function Gamepage() {
         setGame(data[0]);
       } else {
         let datatemp = data[0];
-        datatemp.comments = [{ text: "s", authorName: "", authorID: "" }];
+        datatemp.comments = [{ text: "___", authorName: "", authorID: "" }];
         setGame(datatemp);
       }
 
@@ -74,7 +73,7 @@ export default function Gamepage() {
     };
 
     initState();
-  }, [location, getAccessTokenSilently, inBasket, comment]);
+  }, [location, getAccessTokenSilently, inBasket, comment, setComment]);
 
   const responsive = {
     superLargeDesktop: {
@@ -156,6 +155,7 @@ export default function Gamepage() {
     form.append("comments", tempgame.toString());
 
     removeComment(accessToken, form);
+    setComment("");
   }
 
   //`https://icegaming.s3.eu-central-1.amazonaws.com/games/${game.gameID}/${game.gameID}.exe`
@@ -217,7 +217,7 @@ export default function Gamepage() {
                 </Carousel>
               </div>
             </section>
-            <div className="flex flex-row items-center justify-center w-full mt-1">
+            <div className="flex flex-col items-center justify-center w-full mt-1">
               <div className="flex flex-row items-center justify-center w-full mt-1">
                 {game.tags.map((tag, index) => (
                   <span
@@ -262,7 +262,6 @@ export default function Gamepage() {
                 ) : null}
               </tr>
             </td>
-
             <div className="p-4 mt-5">
               <b>Developer:</b> {game.developerName}
               <br />
@@ -270,7 +269,7 @@ export default function Gamepage() {
               <br />
             </div>
           </div>
-          <div className="flex flex-col items-center justify-center w-full p-4 mt-1 text-white">
+          <div className="flex flex-col items-center justify-center w-full p-4 mt-1 bg-[#283046] text-white">
             <b>Comments:</b>
             {game.comments.map((comment, index) => (
               <div className="w-full" key={index}>
@@ -283,30 +282,33 @@ export default function Gamepage() {
               </div>
             ))}
           </div>
-          <div>
+          <div className="bg-[#283046]">
             <form id="addCommentForm" className="flex justify-center w-full">
               <textarea
                 onChange={(e) => setComment(e.target.value)}
                 value={comment}
-                className="peer block min-h-[auto] rounded border-0 bg-slate-300 px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark: text-neutral-700 dark:placeholder:text-neutral-200 dark:peer-focus:text-primary [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
+                className="peer block min-h-[auto] w-3/5 rounded border-0 bg-slate-300 px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark: text-neutral-700 dark:placeholder:text-neutral-200 dark:peer-focus:text-primary [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
                 id="commentarea"
                 rows={4}
                 placeholder="Your message"
               ></textarea>
-              <button
+              <div>
+                <button
                 onClick={(e: any) => handleAddComment(e)}
                 type="button"
-                className="px-2 py-2 m-2 text-gray-800 bg-gray-300 rounded-lg disabled:bg-gray-800 disabled:text-gray-100"
+                className="px-2 py-2 m-2 w-64 h-9 text-gray-800 bg-gray-300 rounded-lg disabled:bg-gray-800 disabled:text-gray-100"
               >
                 add/replace comment
               </button>
               <button
-                className="px-2 py-2 m-2 text-gray-200 bg-red-900 rounded-lg disabled:bg-gray-800 disabled:text-gray-100"
+                className="px-2 py-2 m-2 w-48 h-9 text-gray-200 bg-red-900 rounded-lg disabled:bg-gray-800 disabled:text-gray-100"
                 type="button"
                 onClick={(e: any) => handleDeleteComment(e)}
               >
                 delete comment
               </button>
+              </div>
+              
             </form>
           </div>
         </div>
